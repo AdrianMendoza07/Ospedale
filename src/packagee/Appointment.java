@@ -31,5 +31,13 @@ public class Appointment {
         this.type = type;
         this.status = AppointmentStatus.REQUESTED;
     }
+
+    public void setStatus(AppointmentStatus status) {
+        this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
     
 }

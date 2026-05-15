@@ -4,6 +4,8 @@
  */
 package packagee;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author edangulo
@@ -13,12 +15,17 @@ public class Doctor extends User {
     private Specialty specialty;
     private String licenceNumber;
     private String assignedOffice;
+    private ArrayList<Hospitalization> hospitalizations;
 
     public Doctor(long id, String username, String firstname, String lastname, String password, Specialty specialty, String licenceNumber, String assignedOffice) {
         super(id, username, firstname, lastname, password);
+        hospitalizations = new ArrayList<>();
         this.specialty = specialty;
         this.licenceNumber = licenceNumber;
         this.assignedOffice = assignedOffice;
     }
     
+    public boolean addHospitalization(Hospitalization hosp){
+        return hospitalizations.add(hosp);
+    }
 }

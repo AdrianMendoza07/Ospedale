@@ -17,6 +17,7 @@ public class Patient extends User {
     private boolean gender;
     private long phone;
     private String address;
+    private Hospitalization hospitalization;
 
     public void setEmail(String email) {
         this.email = email;
@@ -37,6 +38,12 @@ public class Patient extends User {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public void setHospitalization(Hospitalization hospitalization) {
+        this.hospitalization = hospitalization;
+    }
+    
+    
 
     public Patient(long id, String username, String firstname, String lastname, String password, String email, LocalDate birthdate, boolean gender, long phone, String address) {
         super(id, username, firstname, lastname, password);

@@ -20,6 +20,8 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private int x, y;
     private ArrayList<User> users;
+    private ArrayList<Hospitalization> hospitalizations;
+    private ArrayList<Appointment> appointments;
 
     public NewJFrame() {
         initComponents();
@@ -419,17 +421,17 @@ public class NewJFrame extends javax.swing.JFrame {
                 selectedUser = user;
                 if (selectedUser.getPassword().equals(jTextField2.getText())) {
                     if (selectedUser instanceof Administrator ) {
-                        NewJFrame11 admin = new NewJFrame11(selectedUser,users);
+                        NewJFrame11 admin = new NewJFrame11(selectedUser,users,hospitalizations, appointments);
                         this.setVisible(false);
                         admin.setVisible(true);
                     }
                     else if (selectedUser instanceof Doctor ) {
-                        NewJFrame111 doctor = new NewJFrame111(selectedUser,users);
+                        NewJFrame111 doctor = new NewJFrame111(selectedUser,users,hospitalizations,appointments);
                         this.setVisible(false);
                         doctor.setVisible(true);
                     }
                     else {
-                        NewJFrame1 patient = new NewJFrame1(selectedUser,users);
+                        NewJFrame1 patient = new NewJFrame1(selectedUser,users,appointments, hospitalizations);
                         this.setVisible(false);
                         patient.setVisible(true);
                     }

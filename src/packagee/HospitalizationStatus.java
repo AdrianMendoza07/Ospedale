@@ -9,10 +9,9 @@ package packagee;
  * @author edangulo
  */
 public enum HospitalizationStatus {
-    
+
     REQUESTED,
     ONGOING,
-    FINISHED,
     CANCELED
-    
+
 }

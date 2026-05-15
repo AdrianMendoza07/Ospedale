@@ -20,14 +20,20 @@ public class NewJFrame1 extends javax.swing.JFrame {
     private int x, y;
     private User user;
     private ArrayList<User> users;
-    public NewJFrame1(User user, ArrayList<User> users) {
+    private ArrayList<Appointment> appointments;
+    private ArrayList<Hospitalization> hospitalizations;
+
+    public NewJFrame1(User user, ArrayList<User> users, ArrayList<Appointment>appointments, ArrayList<Hospitalization> hospitalizations) {
         initComponents();
         this.user = user;
         this.users = users;
-        if (user instanceof Administrator)
+        this.hospitalizations = hospitalizations;
+        this.appointments = appointments;
+        if (user instanceof Administrator) {
             jButton7.setVisible(true);
-        else    
+        } else {
             jButton7.setVisible(false);
+        }
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
     }
@@ -397,9 +403,19 @@ public class NewJFrame1 extends javax.swing.JFrame {
 
         jRadioButton3.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jRadioButton3.setText("Specialty");
+        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton3ActionPerformed(evt);
+            }
+        });
 
         jRadioButton4.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jRadioButton4.setText("Doctor");
+        jRadioButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton4ActionPerformed(evt);
+            }
+        });
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -424,6 +440,11 @@ public class NewJFrame1 extends javax.swing.JFrame {
 
         jButton3.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jButton3.setText("Create");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -527,7 +548,8 @@ public class NewJFrame1 extends javax.swing.JFrame {
                                     .addGap(47, 47, 47)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(jLabel15)
-                                        .addComponent(jLabel14)))
+                                        .addComponent(jLabel14)
+                                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addGap(63, 63, 63)
                                     .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -543,9 +565,6 @@ public class NewJFrame1 extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createSequentialGroup()
                             .addGap(42, 42, 42)
                             .addComponent(jLabel13)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(44, 44, 44)
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -726,13 +745,18 @@ public class NewJFrame1 extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        String idAppointment = jComboBox4.getItemAt(jComboBox4.getSelectedIndex());
+        for(Appointment ap: this.appointments){
+            if (ap.getId().equals(idAppointment)) {
+                ap.setStatus(AppointmentStatus.CANCELED);
+            }
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         String firstname = jTextField1.getText();
         String lastname = jTextField2.getText();
-        boolean gender = (jComboBox6.getSelectedIndex() == 0 ? null : (jComboBox6.getSelectedIndex() == 1 ));
+        boolean gender = (jComboBox6.getSelectedIndex() == 0 ? null : (jComboBox6.getSelectedIndex() == 1));
         String birth = jTextField4.getText();
         String address = jTextField8.getText();
         long phone = Long.parseLong(jTextField7.getText());
@@ -742,9 +766,9 @@ public class NewJFrame1 extends javax.swing.JFrame {
         String comPassword = jTextField10.getText();
         LocalDate birthdate = LocalDate.of(Integer.parseInt(birth.substring(0, 4)), Integer.parseInt(birth.substring(5, 7)), Integer.parseInt(birth.substring(8)));
         if (comPassword.equals(password)) {
-            for(User user : this.users){
-                if (user.getId() == this.user.getId() && user instanceof Patient ) {
-                    Patient userTemp = (Patient)user;
+            for (User user : this.users) {
+                if (user.getId() == this.user.getId() && user instanceof Patient) {
+                    Patient userTemp = (Patient) user;
                     userTemp.setAddress(address);
                     userTemp.setBirthdate(birthdate);
                     userTemp.setEmail(email);
@@ -757,7 +781,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
                 }
             }
         }
-        
+
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -767,10 +791,43 @@ public class NewJFrame1 extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        NewJFrame11 admin = new NewJFrame11(user,users);
+        NewJFrame11 admin = new NewJFrame11(user, users,hospitalizations, appointments);
         this.setVisible(false);
         admin.setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+        if (jRadioButton4.isSelected()) {
+            jRadioButton4.setSelected(false);
+        }
+
+        jComboBox5.removeAllItems();
+
+        jComboBox5.addItem("Select one");
+        for (Specialty spec : Specialty.values()) {
+            jComboBox5.addItem(spec.toString().replaceAll("_", " & "));
+        }
+    }//GEN-LAST:event_jRadioButton3ActionPerformed
+
+    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
+        if (jRadioButton3.isSelected()) {
+            jRadioButton3.setSelected(false);
+        }
+        jComboBox5.removeAllItems();
+
+        jComboBox5.addItem("Select one");
+        for (User doc : this.users) {
+            if (doc instanceof Doctor) {
+                jComboBox5.addItem(doc.getFirstname() + " " + doc.getLastname());
+            }
+        }
+    }//GEN-LAST:event_jRadioButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        String appointDate = jTextField12.getText();
+        LocalDate appointmentDate = LocalDate.of(Integer.parseInt(appointDate.substring(0, 4)), Integer.parseInt(appointDate.substring(5, 7)), Integer.parseInt(appointDate.substring(8)));
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -16,11 +16,15 @@ public class NewJFrame11 extends javax.swing.JFrame {
 
     private int x, y;
     private ArrayList<User> users;
+    private ArrayList<Appointment>appointments;
+    private ArrayList<Hospitalization>hospitalizations;
     private User user;
-    public NewJFrame11(User user, ArrayList<User>users) {
+    public NewJFrame11(User user, ArrayList<User>users,ArrayList<Hospitalization> hospitalizations, ArrayList<Appointment> appointments) {
         initComponents();
         this.user = user;
         this.users = users;
+        this.hospitalizations = hospitalizations;
+        this.appointments = appointments;
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
     }
@@ -427,7 +431,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        NewJFrame111 doctor = new NewJFrame111(user,users);
+        NewJFrame111 doctor = new NewJFrame111(user, users, hospitalizations,appointments);
         this.setVisible(false);
         doctor.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -439,7 +443,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        NewJFrame1 patient = new NewJFrame1(user,users);
+        NewJFrame1 patient = new NewJFrame1(user,users,appointments,hospitalizations);
         this.setVisible(false);
         patient.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
