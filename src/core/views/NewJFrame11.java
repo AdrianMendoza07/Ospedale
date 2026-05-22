@@ -4,6 +4,8 @@
  */
 package core.views;
 
+import core.controllers.DoctorContoller;
+import core.controllers.utils.Response;
 import core.model.Appointment;
 import core.model.Doctor;
 import core.model.Hospitalization;
@@ -12,6 +14,7 @@ import core.model.Specialty;
 import core.model.User;
 import java.awt.Color;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -413,16 +416,32 @@ public class NewJFrame11 extends javax.swing.JFrame {
     private void SaveAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveAdminButtonActionPerformed
         String firstname = FirstnameAdminTextField.getText();
         String lastname = LastnameAdminTextField.getText();
-        long id = Long.parseLong(IDAdminTextField.getText());
+        String id = IDAdminTextField.getText();
         String spec = SpecialtyAdminComboBox.getItemAt(SpecialtyAdminComboBox.getSelectedIndex());
         String licenseNumber = LicenseNumberAdminTextField.getText();
         String assignedOffice = AssignedOfficeAdminTextField.getText();
         String username = UserAdminTextField.getText();
         String password = PasswordAdminTextField.getText();
         String comPassword = PasswordConfirmationAdminTextField.getText();
-        Specialty specialty = Specialty.valueOf(spec.replaceAll(" &", "").replaceAll(" ", "_"));
-        if (password.equals(comPassword)) {
-            users.add(new Doctor(id, username, firstname, lastname, password, specialty, licenseNumber, assignedOffice));
+        
+        Response response = DoctorContoller.createDoctor(id, username, firstname, lastname, password, comPassword, spec, licenseNumber, assignedOffice);
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Atención " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
+            
+            FirstnameAdminTextField.setText("");
+            LastnameAdminTextField.setText("");
+            IDAdminTextField.setText("");
+            SpecialtyAdminComboBox.setSelectedIndex(0);
+            LicenseNumberAdminTextField.setText("");
+            AssignedOfficeAdminTextField.setText("");
+            UserAdminTextField.setText("");
+            PasswordAdminTextField.setText("");
+            PasswordConfirmationAdminTextField.setText("");
         }
     }//GEN-LAST:event_SaveAdminButtonActionPerformed
 
