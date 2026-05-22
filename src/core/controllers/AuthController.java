@@ -6,7 +6,10 @@ package core.controllers;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
+import core.model.Administrator;
 import core.model.DataRepository;
+import core.model.Doctor;
+import core.model.Patient;
 import core.model.User;
 import java.util.HashMap;
 
@@ -28,8 +31,8 @@ public class AuthController {
                 return new Response("Password field cannot be empty.", Status.BAD_REQUEST);
             }
 
-            DataRepository storage = DataRepository.getInstace();
-            User user = storage.getUser(username);
+            DataRepository storage = DataRepository.getInstance();
+            User user = storage.getUserByUsername(username);
             if (user == null) {
                 return new Response("Incorrect username or password", Status.UNAUTHORIZED);
             }
@@ -37,8 +40,18 @@ public class AuthController {
             if (user.getPassword().equals(password)) {
                 HashMap<String, Object> userData = new HashMap<>();
                 userData.put("username", user.getUsername());
-                
-                return new Response("Username and password are correct, sucessfull login.", Status.OK, userData);
+                userData.put("nombreCompleto", user.getFirstname());
+
+                // Descubrimos el rol por su tipo de clase real
+                if (user instanceof Patient) {
+                    userData.put("role", "PATIENT");
+                } else if (user instanceof Doctor) {
+                    userData.put("role", "DOCTOR");
+                } else if (user instanceof Administrator) {
+                    userData.put("role", "ADMIN");
+                }
+
+                return new Response("Successful login.", Status.OK, userData);
             } else {
                 return new Response("Incorrect username or password", Status.UNAUTHORIZED);
             }
