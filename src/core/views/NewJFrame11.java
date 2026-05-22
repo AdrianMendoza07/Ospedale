@@ -21,16 +21,11 @@ import java.util.ArrayList;
 public class NewJFrame11 extends javax.swing.JFrame {
 
     private int x, y;
-    private ArrayList<User> users;
-    private ArrayList<Appointment>appointments;
-    private ArrayList<Hospitalization>hospitalizations;
-    private User user;
-    public NewJFrame11(User user, ArrayList<User>users,ArrayList<Hospitalization> hospitalizations, ArrayList<Appointment> appointments) {
+    private String currentUsername;
+
+    public NewJFrame11(String username) {
         initComponents();
-        this.user = user;
-        this.users = users;
-        this.hospitalizations = hospitalizations;
-        this.appointments = appointments;
+        this.currentUsername = username;
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
     }
@@ -434,17 +429,18 @@ public class NewJFrame11 extends javax.swing.JFrame {
     private void DoctorViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DoctorViewButtonActionPerformed
         long idDoctor = Long.parseLong(DoctorComboBox.getItemAt(DoctorComboBox.getSelectedIndex()));
         Doctor temp = null;
-        for(User use:this.users){
-            if(use.getId() == idDoctor)
-                temp =(Doctor) user;
+        for (User use : this.users) {
+            if (use.getId() == idDoctor) {
+                temp = (Doctor) user;
+            }
         }
-        NewJFrame111 doctor = new NewJFrame111(user,temp, users, hospitalizations,appointments);
+        NewJFrame111 doctor = new NewJFrame111(user, temp, users, hospitalizations, appointments);
         this.setVisible(false);
         doctor.setVisible(true);
     }//GEN-LAST:event_DoctorViewButtonActionPerformed
 
     private void LogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButtonActionPerformed
-        
+
         NewJFrame login = new NewJFrame();
         this.setVisible(false);
         login.setVisible(true);
@@ -453,11 +449,12 @@ public class NewJFrame11 extends javax.swing.JFrame {
     private void PatientViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PatientViewButtonActionPerformed
         long idPatient = Long.parseLong(DoctorComboBox.getItemAt(DoctorComboBox.getSelectedIndex()));
         Patient temp = null;
-        for(User use:this.users){
-            if(use.getId() == idPatient)
-                temp =(Patient) user;
+        for (User use : this.users) {
+            if (use.getId() == idPatient) {
+                temp = (Patient) user;
+            }
         }
-        NewJFrame1 patient = new NewJFrame1(user,temp,users,appointments,hospitalizations);
+        NewJFrame1 patient = new NewJFrame1(user, temp, users, appointments, hospitalizations);
         this.setVisible(false);
         patient.setVisible(true);
     }//GEN-LAST:event_PatientViewButtonActionPerformed

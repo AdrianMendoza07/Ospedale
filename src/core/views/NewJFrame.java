@@ -5,14 +5,8 @@
 package core.views;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-import core.controllers.UserController;
+import core.controllers.AuthController;
 import core.controllers.utils.Response;
-import core.model.Administrator;
-import core.model.Appointment;
-import core.model.Doctor;
-import core.model.Hospitalization;
-import core.model.Patient;
-import core.model.User;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.Month;
@@ -29,17 +23,11 @@ import javax.swing.UIManager;
 public class NewJFrame extends javax.swing.JFrame {
 
     private int x, y;
-    private ArrayList<User> users;
-    private ArrayList<Hospitalization> hospitalizations;
-    private ArrayList<Appointment> appointments;
-
+    
     public NewJFrame() {
         initComponents();
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
-
-        this.users = new ArrayList<>();
-        this.users.add(new Administrator(0, "admin", "admin", "adnim", "admin123"));
     }
 
     /**
@@ -428,7 +416,7 @@ public class NewJFrame extends javax.swing.JFrame {
         String username = UsernameLoginTextField.getText();
         String password = PasswordLoginTextField.getText();
 
-        Response response = UserController.LogIn(username, password);
+        Response response = AuthController.LogIn(username, password);
 
         if (response.getStatus() >= 500) {
 
@@ -441,20 +429,24 @@ public class NewJFrame extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
 
-            User selectedUser = (User) response.getData().get("user");
+            HashMap<String, Object> userData = response.getData();
+            String role = (String) userData.get("role");
+            String currentUsername = (String) userData.get("username");
 
-            if (selectedUser instanceof Administrator) {
-                NewJFrame11 admin = new NewJFrame11(selectedUser, users, hospitalizations, appointments);
+            this.setVisible(false);
+
+            if ("ADMIN".equals(role)) {
+                NewJFrame11 admin = new NewJFrame11(currentUsername);
                 admin.setVisible(true);
-            } else if (selectedUser instanceof Doctor) {
-                NewJFrame111 doctor = new NewJFrame111(selectedUser, (Doctor) selectedUser, users, hospitalizations, appointments);
+            } else if ("DOCTOR".equals(role)) {
+                NewJFrame111 doctor = new NewJFrame111(currentUsername, role);
                 doctor.setVisible(true);
-            } else {
-                NewJFrame1 patient = new NewJFrame1(selectedUser, (Patient) selectedUser, users, appointments, hospitalizations);
+            } else if ("PATIENT".equals(role)) {
+                NewJFrame1 patient = new NewJFrame1(currentUsername, role);
                 patient.setVisible(true);
             }
-
         }
+
     }//GEN-LAST:event_EnterButtonActionPerformed
 
     private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed

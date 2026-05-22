@@ -28,20 +28,12 @@ import javax.swing.table.DefaultTableModel;
 public class NewJFrame1 extends javax.swing.JFrame {
 
     private int x, y;
-    private User user;
-    private ArrayList<User> users;
-    private Patient patient;
-    private ArrayList<Appointment> appointments;
-    private ArrayList<Hospitalization> hospitalizations;
+    private String currentUsername;
 
-    public NewJFrame1(User user,Patient patient, ArrayList<User> users, ArrayList<Appointment>appointments, ArrayList<Hospitalization> hospitalizations) {
+    public NewJFrame1(String username, String role) {
         initComponents();
-        this.user = user;
-        this.users = users;
-        this.patient = patient;
-        this.hospitalizations = hospitalizations;
-        this.appointments = appointments;
-        if (user instanceof Administrator) {
+        this.currentUsername = username;
+        if ("ADMIN".equals(role)) {
             jButton7.setVisible(true);
         } else {
             jButton7.setVisible(false);
@@ -784,7 +776,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         String idAppointment = jComboBox4.getItemAt(jComboBox4.getSelectedIndex());
-        for(Appointment ap: this.appointments){
+        for (Appointment ap : this.appointments) {
             if (ap.getId().equals(idAppointment)) {
                 ap.setStatus(AppointmentStatus.CANCELED);
             }
@@ -829,7 +821,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        NewJFrame11 admin = new NewJFrame11(user, users,hospitalizations, appointments);
+        NewJFrame11 admin = new NewJFrame11(user, users, hospitalizations, appointments);
         this.setVisible(false);
         admin.setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
@@ -869,12 +861,12 @@ public class NewJFrame1 extends javax.swing.JFrame {
         String appointmentReason = AppointmentReasonTextArea.getText();
         long docId = Long.parseLong(jComboBox5.getItemAt(jComboBox5.getSelectedIndex()));
         Doctor doctor = null;
-        for(User use:this.users){
+        for (User use : this.users) {
             if (use.getId() == docId) {
                 doctor = (Doctor) use;
             }
         }
-        boolean appointmentType = (ApointmentTypeComboBox.getSelectedIndex() == 0 ? null : (ApointmentTypeComboBox.getSelectedIndex() == 2 ));
+        boolean appointmentType = (ApointmentTypeComboBox.getSelectedIndex() == 0 ? null : (ApointmentTypeComboBox.getSelectedIndex() == 2));
         this.appointments.add(new Appointment(appointDate, patient, doctor, doctor.getSpecialty(), Finally, appointDate, appointmentType));
     }//GEN-LAST:event_CreateAppointmentButtonActionPerformed
 
@@ -893,18 +885,17 @@ public class NewJFrame1 extends javax.swing.JFrame {
         String hospitalizationReason = HospitalizationReasonTextArea.getText();
         long idDoctor = Long.parseLong(AttendingDoctorComboBox.getItemAt(AttendingDoctorComboBox.getSelectedIndex()));
         Doctor doc = null;
-        for(User use: this.users){
-            if (use.getId()  == idDoctor ){
+        for (User use : this.users) {
+            if (use.getId() == idDoctor) {
                 doc = (Doctor) use;
             }
         }
-        LocalDate stimateDate = LocalDate.of(Integer.parseInt(EstimatedDateOfAdmissionTextField.getText().substring(0, 4)),Integer.parseInt(EstimatedDateOfAdmissionTextField.getText().substring(5, 7)), Integer.parseInt(EstimatedDateOfAdmissionTextField.getText().substring(8)));
-        
+        LocalDate stimateDate = LocalDate.of(Integer.parseInt(EstimatedDateOfAdmissionTextField.getText().substring(0, 4)), Integer.parseInt(EstimatedDateOfAdmissionTextField.getText().substring(5, 7)), Integer.parseInt(EstimatedDateOfAdmissionTextField.getText().substring(8)));
+
         RoomType desireRoom = RoomType.valueOf(DesiredRoomTypeComboBox.getItemAt(DesiredRoomTypeComboBox.getSelectedIndex()).toUpperCase());
         String observations = ObservationsTextArea.getText();
         this.hospitalizations.add(new Hospitalization(observations, this.patient, doc, stimateDate, observations, desireRoom, observations));
     }//GEN-LAST:event_CreateHospitalizationButtonActionPerformed
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

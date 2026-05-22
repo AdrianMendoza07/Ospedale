@@ -29,23 +29,17 @@ import javax.swing.table.DefaultTableModel;
 public class NewJFrame111 extends javax.swing.JFrame {
 
     private int x, y;
-    private User user;
-    private ArrayList<User> users;
-    private ArrayList<Hospitalization>hospitalizations;
-    private ArrayList<Appointment>appointments;
-    private Doctor doctor;
-    private Patient patient;
-    public NewJFrame111(User user,Doctor doc, ArrayList<User> users,ArrayList<Hospitalization> hospitalizations,ArrayList<Appointment> appointments) {
+    private String currentUsername;
+
+    public NewJFrame111(String username, String role) {
         initComponents();
-        this.user = user;
-        this.users =users;
-        this.doctor = doc;
-        this.hospitalizations = hospitalizations;
-        this.appointments = appointments;
-        if (user instanceof Administrator)
+        this.currentUsername = username;
+
+        if ("ADMIN".equals(role)) {
             BackDoctorViewButton.setVisible(true);
-        else    
+        } else {
             BackDoctorViewButton.setVisible(false);
+        }
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
     }
@@ -1150,7 +1144,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
         String comPassword = PasswordConfirmationDoctorTextField.getText();
         Specialty specialty = Specialty.valueOf(spec.replaceAll(" &", "").replaceAll(" ", "_"));
         if (password.equals(comPassword)) {
-            for(User doc: this.users){
+            for (User doc : this.users) {
                 if (doctor.getId() == doc.getId()) {
                     doctor.setFirstname(firstname);
                     doctor.setLastname(lastname);
@@ -1159,7 +1153,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
                     doctor.setAssignedOffice(assignedOffice);
                     doctor.setLicenceNumber(licenseNumber);
                     doctor.setSpecialty(specialty);
-                    
+
                 }
             }
         }
@@ -1172,14 +1166,14 @@ public class NewJFrame111 extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void BackDoctorViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackDoctorViewButtonActionPerformed
-        NewJFrame11 admin = new NewJFrame11(user,users,hospitalizations, appointments);
+        NewJFrame11 admin = new NewJFrame11(user, users, hospitalizations, appointments);
         this.setVisible(false);
         admin.setVisible(true);
     }//GEN-LAST:event_BackDoctorViewButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
         if (jRadioButton5.isSelected()) {
-            for(Hospitalization hosp : this.hospitalizations){
+            for (Hospitalization hosp : this.hospitalizations) {
                 if (jComboBox6.getItemAt(jComboBox6.getSelectedIndex()) == hosp.getId()) {
                     hosp.setStatus(HospitalizationStatus.CANCELED);
                 }
@@ -1189,7 +1183,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
 
     private void GenerateHospitalizationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateHospitalizationButtonActionPerformed
         if (jRadioButton6.isSelected()) {
-            for(User user: this.users){
+            for (User user : this.users) {
                 if (user instanceof Patient) {
                     if (jComboBox8.getItemAt(jComboBox8.getSelectedIndex()).equals(user.getId())) {
                         if (this.user instanceof Administrator) {
@@ -1197,7 +1191,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
                             String observations = ObservationsHospitalizationTextArea.getText();
                             String entDate = DateOfEntryTextField.getText();
                             LocalDate entryDate = LocalDate.of(Integer.parseInt(entDate.substring(0, 4)), Integer.parseInt(entDate.substring(5, 7)), Integer.parseInt(entDate.substring(8)));
-                            this.hospitalizations.add(new Hospitalization("asdfasdf", (Patient)user, this.doctor, LocalDate.MAX, reason, RoomType.IMC, observations, HospitalizationStatus.ONGOING));
+                            this.hospitalizations.add(new Hospitalization("asdfasdf", (Patient) user, this.doctor, LocalDate.MAX, reason, RoomType.IMC, observations, HospitalizationStatus.ONGOING));
                         }
                     }
                 }
@@ -1213,7 +1207,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
                 p = (Patient) u;
             }
         }
-        
+
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         model.setRowCount(0);
         for (Appointment a : p.getAppointments()) {
@@ -1234,8 +1228,8 @@ public class NewJFrame111 extends javax.swing.JFrame {
 
     private void AcceptAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AcceptAppointmentButtonActionPerformed
         String idAppointment = AppointmentIDComboBox.getItemAt(AppointmentIDComboBox.getSelectedIndex());
-        for(Appointment apo: this.appointments){
-            if(apo.getId() == idAppointment){
+        for (Appointment apo : this.appointments) {
+            if (apo.getId() == idAppointment) {
                 apo.setStatus(AppointmentStatus.PENDING);
             }
         }
@@ -1247,8 +1241,8 @@ public class NewJFrame111 extends javax.swing.JFrame {
         String observations = ObservationsAppointmentTextArea.getText();
         String recommendedTrea = RecommendedTeatmentTextArea.getText();
         String followUp = IndicationTextArea.getText();
-        for(Appointment apo: this.appointments){
-            if(apo.getId() == idAppointment){
+        for (Appointment apo : this.appointments) {
+            if (apo.getId() == idAppointment) {
                 apo.setStatus(AppointmentStatus.CANCELED);
                 apo.setDiagnosis(diagnosis);
                 apo.setFollowUp(followUp);
@@ -1266,7 +1260,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
     private void AddPescribeMedicationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddPescribeMedicationButtonActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        
+
         String appointmentId = AppointmentIDPescribeMedicationComboBox.getItemAt(AppointmentIDPescribeMedicationComboBox.getSelectedIndex());
         String medicationName = MedicationNamePescribeMedicationTextField.getText();
         double dose = Double.parseDouble(DosePescribeMedicationTextField.getText());
@@ -1274,10 +1268,10 @@ public class NewJFrame111 extends javax.swing.JFrame {
         int tratementduration = Integer.parseInt(TreatmentDurationPescribeMedicationTextField.getText());
         String aditionalIformation = AditionalInstructionsPescribeMedicationTextField.getText();
         int frecuency = Integer.parseInt(FrecuencyTextField.getText());
-        
+
         model.addRow(new Object[]{appointmentId, medicationName, DosePescribeMedicationTextField.getText(), administrationRoute, "" + tratementduration, aditionalIformation, "" + frecuency});
-        for(Appointment apo: this.appointments){
-            if (apo.getId().equals(appointmentId)){
+        for (Appointment apo : this.appointments) {
+            if (apo.getId().equals(appointmentId)) {
                 apo.addPrescription(new prescription(apo, medicationName, dose, administrationRoute, tratementduration, aditionalIformation, frecuency));
             }
         }
@@ -1286,17 +1280,15 @@ public class NewJFrame111 extends javax.swing.JFrame {
     private void AcceptRescheduleAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AcceptRescheduleAppointmentButtonActionPerformed
         String appointmentId = RescheduleAppointmentComboBox.getItemAt(RescheduleAppointmentComboBox.getSelectedIndex());
         Appointment appointment = null;
-        for(Appointment apo: this.appointments){
+        for (Appointment apo : this.appointments) {
             if (apo.getId().equals(appointmentId)) {
                 appointment = apo;
             }
         }
-        appointment.getDatetime().with(LocalTime.of(Integer.parseInt(NewTimeAppointmentTextField.getText().substring(0, 2)),Integer.parseInt(NewTimeAppointmentTextField.getText().substring(3))));
+        appointment.getDatetime().with(LocalTime.of(Integer.parseInt(NewTimeAppointmentTextField.getText().substring(0, 2)), Integer.parseInt(NewTimeAppointmentTextField.getText().substring(3))));
         String reasonChangeTime = ReasonForAppointmentTextField.getText();
         appointment.setReason(reasonChangeTime);
     }//GEN-LAST:event_AcceptRescheduleAppointmentButtonActionPerformed
-
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
