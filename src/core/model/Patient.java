@@ -21,50 +21,55 @@ public class Patient extends User {
     private ArrayList<Appointment> appointments;
     private Hospitalization hospitalization;
 
-    public Patient(long id, String username, String firstname, String lastname, String password, 
-                   String email, LocalDate birthdate, boolean gender, long phone, String address) {
-        
+    public Patient(long id, String username, String firstname, String lastname, String password, String email, LocalDate birthdate, boolean gender, long phone, String address) {
         super(id, username, firstname, lastname, password);
-        
-        validarDatosPatient(email, phone);
-        
         this.email = email;
         this.birthdate = birthdate;
         this.gender = gender;
         this.phone = phone;
         this.address = address;
         this.appointments = new ArrayList<>();
-    }
-
-    private void validarDatosPatient(String email, long phone) {
-        String phoneTexto = String.valueOf(phone);
-        if (phoneTexto.length() != 10) {
-            throw new IllegalArgumentException("El teléfono del paciente debe tener exactamente 10 dígitos.");
-        }
-        
-        if (email == null || !email.matches("^[^@]+@[^@]+\\.com$")) {
-            throw new IllegalArgumentException("El email de los pacientes debe ser válido (ejemplo: XXXXX@XXXXX.com).");
-        }
+        this.hospitalization = null;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public LocalDate getBirthdate() {
         return birthdate;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
     }
 
     public boolean isGender() {
         return gender;
     }
 
+    public void setGender(boolean gender) {
+        this.gender = gender;
+    }
+
     public long getPhone() {
         return phone;
     }
 
+    public void setPhone(long phone) {
+        this.phone = phone;
+    }
+
     public String getAddress() {
         return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public ArrayList<Appointment> getAppointments() {
@@ -75,34 +80,12 @@ public class Patient extends User {
         return hospitalization;
     }
 
-    public void setEmail(String email) {
-        validarDatosPatient(email, this.phone);
-        this.email = email;
-    }
-
-    public void setPhone(long phone) {
-        validarDatosPatient(this.email, phone);
-        this.phone = phone;
-    }
-
-    public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = birthdate;
-    }
-
-    public void setGender(boolean gender) {
-        this.gender = gender;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public void setHospitalization(Hospitalization hospitalization) {
         this.hospitalization = hospitalization;
     }
-    
-    public void addAppointment(Appointment a) {
-        this.appointments.add(a);
+
+    public boolean addAppointment(Appointment appointment) {
+        return this.appointments.add(appointment);
     }
     
 }

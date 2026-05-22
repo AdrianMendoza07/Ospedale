@@ -17,11 +17,6 @@ public abstract class User {
     protected String password;
 
     public User(long id, String username, String firstname, String lastname, String password) {
-        String idTexto = String.valueOf(id);
-        if (id <= 0 || idTexto.length() != 12) {
-            throw new IllegalArgumentException("El ID debe ser mayor a 0 y tener exactamente 12 dígitos.");
-        }
-        
         this.id = id;
         this.username = username;
         this.firstname = firstname;
@@ -37,28 +32,28 @@ public abstract class User {
         return username;
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstname() {
+        return firstname;
     }
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
 
+    public String getLastname() {
+        return lastname;
+    }
+
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {

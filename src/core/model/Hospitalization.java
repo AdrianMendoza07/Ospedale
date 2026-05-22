@@ -21,17 +21,12 @@ public class Hospitalization {
     private String observations;
     private HospitalizationStatus status;
 
-    
     public Hospitalization(String id, Patient patient, Doctor doctor, LocalDate date, String reason, RoomType roomType, String observations) {
         this.id = id;
         this.patient = patient;
-        if (patient != null) {
-            patient.setHospitalization(this);
-        }
+        if (patient != null) patient.setHospitalization(this);
         this.doctor = doctor;
-        if (doctor != null) {
-            doctor.addHospitalization(this);
-        }
+        if (doctor != null) doctor.addHospitalization(this);
         this.date = date;
         this.reason = reason;
         this.roomType = roomType;
@@ -42,13 +37,9 @@ public class Hospitalization {
     public Hospitalization(String id, Patient patient, Doctor doctor, LocalDate date, String reason, RoomType roomType, String observations, HospitalizationStatus hopsS) {
         this.id = id;
         this.patient = patient;
-        if (patient != null) {
-            patient.setHospitalization(this);
-        }
+        if (patient != null) patient.setHospitalization(this);
         this.doctor = doctor;
-        if (doctor != null) {
-            doctor.addHospitalization(this);
-        }
+        if (doctor != null) doctor.addHospitalization(this);
         this.date = date;
         this.reason = reason;
         this.roomType = roomType;
