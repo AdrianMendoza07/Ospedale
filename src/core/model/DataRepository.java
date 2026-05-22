@@ -88,13 +88,10 @@ public class DataRepository {
         return true;
     }
 
-    public boolean updatePatient(long longId, String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
-        Patient target = findPatientById(longId);
+    public boolean updatePatient(String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
+        User target = getUserByUsername(username);
         if (target != null) {
-            User existente = getUserByUsername(username);
-            if (existente != null && existente.getId() != longId) {
-                return false;
-            }
+            
             target.setUsername(username);
             target.setFirstname(firstname);
             target.setLastname(lastname);

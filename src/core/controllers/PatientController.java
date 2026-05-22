@@ -24,7 +24,8 @@ public class PatientController {
             long longId, longPhone;
             boolean boolGender;
             LocalDate dateBirthdate;
-
+            
+            //Revisamos que los campos no esten vacios
             if(id.trim().equals("")){
                 return new Response("Id must not be empty", Status.BAD_REQUEST);
             }
@@ -52,6 +53,8 @@ public class PatientController {
             if (address.trim().equals("")) {
                 return new Response("Address must not be empty", Status.BAD_REQUEST);
             }
+            
+            //Revisamos id valido
             try {
                 longId = Long.parseLong(id.trim());
                 if (longId < 0) {
@@ -65,42 +68,48 @@ public class PatientController {
                 return new Response("Id must be a number", Status.BAD_REQUEST);
             }
 
+            //Revisamos telefono valido
             try {
                 longPhone = Long.parseLong(phone.trim());
                 if (longPhone < 0) {
                     return new Response("Phone must be positive.", Status.BAD_REQUEST);
                 }
-                if (phone.length() != 12) {
+                if (phone.length() != 10) {
                     return new Response("Phone must have 12 digits.", Status.BAD_REQUEST);
                 }
 
             } catch (NumberFormatException e) {
                 return new Response("Phone must be a number", Status.BAD_REQUEST);
             }
-
+            
+            //Revisamos fecha valida
             try {
                 dateBirthdate = LocalDate.parse(birthdate);
             } catch (DateTimeParseException e) {
                 return new Response("Invalid date", Status.BAD_REQUEST);
             }
 
+            //Revisamos que las passwords sean iguales
             if (!password.equals(comPassword)) {
                 return new Response("Password and password comfirmation must be the same", Status.BAD_REQUEST);
             }
-
+            
+            //Revisamos email valido
             String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.com$";
             if (!email.matches(emailRegex)) {
                 return new Response("Not a valid email", Status.BAD_REQUEST);
             }
 
-            if (gender.trim().equals("Female")) {
-                boolGender = false;
-            }else{
-                boolGender = true;
+            //Revisamos que se haya elegido gender
+            if(!gender.equals("Male") && !gender.equals("Female")){
+                return new Response("Must choose a gender", Status.BAD_REQUEST);
             }
+            
+            //Se asigna gender como booleano
+            boolGender = !gender.equals("Female");
 
             
-
+            //Se crea el paciente
             DataRepository storage = DataRepository.getInstance();
             if (!storage.addPatient(longId, username, firstname, lastname, password, email, dateBirthdate, boolGender, longPhone, address)) {
                 return new Response("Patient with those cretentials already exists", Status.BAD_REQUEST);
@@ -116,9 +125,9 @@ public class PatientController {
     public static Response updatePatient(String username, String firstname, String lastname, String password, String comPassword, String email, String birthdate, String gender, String phone, String address) {
 
         try {
-            long longPhone;
-            boolean boolGender;
-            LocalDate dateBirthdate;
+            long lPhone;
+            boolean bGender;
+            LocalDate dBirthdate;
 
             
             if (username.trim().equals("")) {
@@ -154,11 +163,11 @@ public class PatientController {
             }
 
             try {
-                longPhone = Long.parseLong(phone.trim());
-                if (longPhone < 0) {
+                lPhone = Long.parseLong(phone.trim());
+                if (lPhone < 0) {
                     return new Response("Phone must be positive.", Status.BAD_REQUEST);
                 }
-                if (phone.length() != 12) {
+                if (phone.length() != 10) {
                     return new Response("Phone must have 12 digits.", Status.BAD_REQUEST);
                 }
 
@@ -167,7 +176,7 @@ public class PatientController {
             }
 
             try {
-                dateBirthdate = LocalDate.parse(birthdate);
+                dBirthdate = LocalDate.parse(birthdate);
             } catch (DateTimeParseException e) {
                 return new Response("Invalid date", Status.BAD_REQUEST);
             }
@@ -181,21 +190,23 @@ public class PatientController {
                 return new Response("Not a valid email", Status.BAD_REQUEST);
             }
 
-            if (gender.trim().equals("Female")) {
-                boolGender = false;
-            }else{
-                boolGender = true;
+            if(!gender.equals("Male") && !gender.equals("Female")){
+                return new Response("Must choose a gender", Status.BAD_REQUEST);
             }
+            
+            bGender = !gender.equals("Female");
 
             
 
            
             
-            storage.updatePatient(username, firstname, lastname, password, email, dateBirthdate, boolGender, longPhone, address)
+            storage.updatePatient(username, firstname, lastname, password, email, dBirthdate, bGender, lPhone, address);
             return new Response("Patient updated successfully", Status.OK);
 
         } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    
 }
