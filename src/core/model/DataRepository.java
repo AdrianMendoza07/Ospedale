@@ -55,7 +55,17 @@ public class DataRepository {
         return null;
     }
 
-    public User findUserByUsername(String username) {
+    public User findUserById(long id) {
+        if (findPatientById(id) != null) return findPatientById(id);
+        if (findDoctorById(id) != null) return findDoctorById(id);
+        for (Administrator a : administrators) {
+            if (a.getId() == id) return a;
+        }
+        return null;
+    }
+
+    public User getUserByUsername(String username) {
+        if (username == null) return null;
         for (Patient p : patients) {
             if (p.getUsername().equalsIgnoreCase(username)) return p;
         }
@@ -69,14 +79,22 @@ public class DataRepository {
     }
 
 
-    public void addPatient(long longId, String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
+    public boolean addPatient(long longId, String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
+        if (findUserById(longId) != null || getUserByUsername(username) != null) {
+            return false;
+        }
         Patient target = new Patient(longId, username, firstname, lastname, password, email, dateBirthdate, boolGender, longPhone, address);
         this.patients.add(target);
+        return true;
     }
 
-    public void updatePatient(long longId, String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
+    public boolean updatePatient(long longId, String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
         Patient target = findPatientById(longId);
         if (target != null) {
+            User existente = getUserByUsername(username);
+            if (existente != null && existente.getId() != longId) {
+                return false;
+            }
             target.setUsername(username);
             target.setFirstname(firstname);
             target.setLastname(lastname);
@@ -86,7 +104,9 @@ public class DataRepository {
             target.setGender(boolGender);
             target.setPhone(longPhone);
             target.setAddress(address);
+            return true;
         }
+        return false;
     }
 
     public void deletePatient(long id) {
@@ -96,15 +116,23 @@ public class DataRepository {
         }
     }
 
-
-    public void addDoctor(long longId, String username, String firstname, String lastname, String password, String licenceNumber, Specialty specialty, String assignedOffice) {
+    public boolean addDoctor(long longId, String username, String firstname, String lastname, String password, String licenceNumber, Specialty specialty, String assignedOffice) {
+        // Validación de unicidad
+        if (findUserById(longId) != null || getUserByUsername(username) != null) {
+            return false;
+        }
         Doctor target = new Doctor(longId, username, firstname, lastname, password, licenceNumber, specialty, assignedOffice);
         this.doctors.add(target);
+        return true;
     }
 
-    public void updateDoctor(long longId, String username, String firstname, String lastname, String password, String licenceNumber, Specialty specialty, String assignedOffice) {
+    public boolean updateDoctor(long longId, String username, String firstname, String lastname, String password, String licenceNumber, Specialty specialty, String assignedOffice) {
         Doctor target = findDoctorById(longId);
         if (target != null) {
+            User existente = getUserByUsername(username);
+            if (existente != null && existente.getId() != longId) {
+                return false;
+            }
             target.setUsername(username);
             target.setFirstname(firstname);
             target.setLastname(lastname);
@@ -112,7 +140,9 @@ public class DataRepository {
             target.setLicenceNumber(licenceNumber);
             target.setSpecialty(specialty);
             target.setAssignedOffice(assignedOffice);
+            return true;
         }
+        return false;
     }
 
     public void deleteDoctor(long id) {
