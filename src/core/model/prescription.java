@@ -57,33 +57,5 @@ public class prescription {
     public int getFrecuency() {
         return frecuency;
     }
-
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
-    }
-
-    public void setMedicationName(String medicationName) {
-        this.medicationName = medicationName;
-    }
-
-    public void setDose(double dose) {
-        this.dose = dose;
-    }
-
-    public void setAdministrationRoute(String administrationRoute) {
-        this.administrationRoute = administrationRoute;
-    }
-
-    public void setTreatmentDuration(int treatmentDuration) {
-        this.treatmentDuration = treatmentDuration;
-    }
-
-    public void setAdditionalInstructions(String additionalInstructions) {
-        this.additionalInstructions = additionalInstructions;
-    }
-
-    public void setFrecuency(int frecuency) {
-        this.frecuency = frecuency;
-    }
     
 }
