@@ -6,6 +6,7 @@ package core.views;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import core.controllers.AuthController;
+import core.controllers.PatientController;
 import core.controllers.utils.Response;
 import java.awt.Color;
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ import javax.swing.UIManager;
 public class NewJFrame extends javax.swing.JFrame {
 
     private int x, y;
-    
+
     public NewJFrame() {
         initComponents();
         this.setBackground(new Color(0, 0, 0, 0));
@@ -452,18 +453,36 @@ public class NewJFrame extends javax.swing.JFrame {
     private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed
         String firstname = FirstNameTextField.getText();
         String lastname = LastNameTextField.getText();
-        long id = Long.parseLong(IDTextField.getText());
-        boolean gender = (GenderComboBox.getSelectedIndex() == 0 ? null : (GenderComboBox.getSelectedIndex() == 1));
-        String birth = BirthdateTextField.getText();
+        String id = IDTextField.getText();
+        String gender = GenderComboBox.getItemAt(GenderComboBox.getSelectedIndex());
+        String birthdate = BirthdateTextField.getText();
         String address = AddressTextField.getText();
-        long phone = Long.parseLong(PhoneTextField.getText());
+        String phone = PhoneTextField.getText();
         String email = EmailTextField.getText();
-        String user = UserTextField.getText();
+        String username = UserTextField.getText();
         String password = PasswordRegisterTextField.getText();
         String comPassword = PasswordConfirmationTextField.getText();
-        LocalDate birthdate = LocalDate.of(Integer.parseInt(birth.substring(0, 4)), Integer.parseInt(birth.substring(5, 7)), Integer.parseInt(birth.substring(8)));
-        if (comPassword.equals(password)) {
-            users.add(new Patient(id, user, firstname, lastname, password, email, birthdate, gender, phone, address));
+
+        Response response = PatientController.createPatient(id, username, firstname, lastname, password, comPassword, email, birthdate, gender, phone, address);
+
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Atención " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
+            
+            FirstNameTextField.setText("");
+            LastNameTextField.setText("");
+            IDTextField.setText("");
+            GenderComboBox.setSelectedIndex(0);
+            BirthdateTextField.setText("");
+            AddressTextField.setText("");
+            PhoneTextField.setText("");
+            EmailTextField.setText("");
+            UserTextField.setText("");
+            PasswordRegisterTextField.setText("");
+            PasswordConfirmationTextField.setText("");
         }
 
     }//GEN-LAST:event_SaveButtonActionPerformed
