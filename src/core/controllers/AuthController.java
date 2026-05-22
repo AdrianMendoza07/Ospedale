@@ -8,6 +8,7 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.model.DataRepository;
 import core.model.User;
+import java.util.HashMap;
 
 /**
  *
@@ -18,11 +19,6 @@ public class AuthController {
     public static Response LogIn(String username, String password) {
 
         try {
-            DataRepository storage = DataRepository.getInstace();
-            User user = storage.getUser(username);
-            if (user == null) {
-                return new Response("User doesnt exist.", Status.NOT_FOUND);
-            }
 
             if (username.trim().equals("")) {
                 return new Response("Username field cannot be empty.", Status.BAD_REQUEST);
@@ -32,10 +28,19 @@ public class AuthController {
                 return new Response("Password field cannot be empty.", Status.BAD_REQUEST);
             }
 
+            DataRepository storage = DataRepository.getInstace();
+            User user = storage.getUser(username);
+            if (user == null) {
+                return new Response("Incorrect username or password", Status.UNAUTHORIZED);
+            }
+
             if (user.getPassword().equals(password)) {
-                return new Response("Username and Password are correct, sucessfull login.", Status.OK);
+                HashMap<String, Object> userData = new HashMap<>();
+                userData.put("username", user.getUsername());
+                
+                return new Response("Username and password are correct, sucessfull login.", Status.OK, userData);
             } else {
-                return new Response("Incorrect Password, failed login.", Status.UNAUTHORIZED);
+                return new Response("Incorrect username or password", Status.UNAUTHORIZED);
             }
         } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
