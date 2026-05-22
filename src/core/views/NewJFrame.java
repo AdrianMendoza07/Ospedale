@@ -5,6 +5,8 @@
 package core.views;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import core.controllers.UserController;
+import core.controllers.utils.Response;
 import core.model.Administrator;
 import core.model.Appointment;
 import core.model.Doctor;
@@ -15,6 +17,8 @@ import java.awt.Color;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.HashMap;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -53,7 +57,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         panelRound3 = new core.model.PanelRound();
         jLabel1 = new javax.swing.JLabel();
-        UserNameTextField = new javax.swing.JTextField();
+        UsernameLoginTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         PasswordLoginTextField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -130,8 +134,8 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Yu Gothic UI", 1, 24)); // NOI18N
         jLabel1.setText("LOGIN");
 
-        UserNameTextField.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        UserNameTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        UsernameLoginTextField.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        UsernameLoginTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jLabel2.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel2.setText("USERNAME");
@@ -170,7 +174,7 @@ public class NewJFrame extends javax.swing.JFrame {
                                 .addGap(24, 24, 24))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRound3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(PasswordLoginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(UserNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(UsernameLoginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(panelRound3Layout.createSequentialGroup()
                         .addGap(471, 471, 471)
                         .addComponent(EnterButton)))
@@ -184,7 +188,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addGap(74, 74, 74)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(UserNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(UsernameLoginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
@@ -421,37 +425,43 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void EnterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterButtonActionPerformed
         // TODO add your handling code here:
-        User selectedUser = null;
-        for (User user : this.users) {
-            if (UserNameTextField.getText().equals(user.getUsername())) {
-                selectedUser = user;
-                if (selectedUser.getPassword().equals(PasswordLoginTextField.getText())) {
-                    if (selectedUser instanceof Administrator ) {
-                        NewJFrame11 admin = new NewJFrame11(selectedUser,users,hospitalizations, appointments);
-                        this.setVisible(false);
-                        admin.setVisible(true);
-                    }
-                    else if (selectedUser instanceof Doctor ) {
-                        NewJFrame111 doctor = new NewJFrame111(selectedUser,(Doctor)selectedUser,users,hospitalizations,appointments);
-                        this.setVisible(false);
-                        doctor.setVisible(true);
-                    }
-                    else {
-                        NewJFrame1 patient = new NewJFrame1(selectedUser,(Patient) selectedUser,users,appointments, hospitalizations);
-                        this.setVisible(false);
-                        patient.setVisible(true);
-                    }
-                }
-            }
-        }
+        String username = UsernameLoginTextField.getText();
+        String password = PasswordLoginTextField.getText();
 
+        Response response = UserController.LogIn(username, password);
+
+        if (response.getStatus() >= 500) {
+
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+
+        } else if (response.getStatus() >= 400) {
+
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+
+            User selectedUser = (User) response.getData().get("user");
+
+            if (selectedUser instanceof Administrator) {
+                NewJFrame11 admin = new NewJFrame11(selectedUser, users, hospitalizations, appointments);
+                admin.setVisible(true);
+            } else if (selectedUser instanceof Doctor) {
+                NewJFrame111 doctor = new NewJFrame111(selectedUser, (Doctor) selectedUser, users, hospitalizations, appointments);
+                doctor.setVisible(true);
+            } else {
+                NewJFrame1 patient = new NewJFrame1(selectedUser, (Patient) selectedUser, users, appointments, hospitalizations);
+                patient.setVisible(true);
+            }
+
+        }
     }//GEN-LAST:event_EnterButtonActionPerformed
 
     private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed
         String firstname = FirstNameTextField.getText();
         String lastname = LastNameTextField.getText();
         long id = Long.parseLong(IDTextField.getText());
-        boolean gender = (GenderComboBox.getSelectedIndex() == 0 ? null : (GenderComboBox.getSelectedIndex() == 1 ));
+        boolean gender = (GenderComboBox.getSelectedIndex() == 0 ? null : (GenderComboBox.getSelectedIndex() == 1));
         String birth = BirthdateTextField.getText();
         String address = AddressTextField.getText();
         long phone = Long.parseLong(PhoneTextField.getText());
@@ -463,7 +473,7 @@ public class NewJFrame extends javax.swing.JFrame {
         if (comPassword.equals(password)) {
             users.add(new Patient(id, user, firstname, lastname, password, email, birthdate, gender, phone, address));
         }
-        
+
     }//GEN-LAST:event_SaveButtonActionPerformed
 
     private void PasswordConfirmationTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PasswordConfirmationTextFieldActionPerformed
@@ -485,8 +495,8 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField PasswordRegisterTextField;
     private javax.swing.JTextField PhoneTextField;
     private javax.swing.JButton SaveButton;
-    private javax.swing.JTextField UserNameTextField;
     private javax.swing.JTextField UserTextField;
+    private javax.swing.JTextField UsernameLoginTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

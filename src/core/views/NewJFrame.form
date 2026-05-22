@@ -142,7 +142,7 @@
                                       </Group>
                                       <Group type="103" alignment="1" groupAlignment="0" attributes="0">
                                           <Component id="PasswordLoginTextField" min="-2" pref="152" max="-2" attributes="0"/>
-                                          <Component id="UserNameTextField" min="-2" pref="152" max="-2" attributes="0"/>
+                                          <Component id="UsernameLoginTextField" min="-2" pref="152" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -163,7 +163,7 @@
                           <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
                           <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="UserNameTextField" min="-2" max="-2" attributes="0"/>
+                          <Component id="UsernameLoginTextField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -184,7 +184,7 @@
                     <Property name="text" type="java.lang.String" value="LOGIN"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="UserNameTextField">
+                <Component class="javax.swing.JTextField" name="UsernameLoginTextField">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Yu Gothic UI" size="18" style="0"/>
