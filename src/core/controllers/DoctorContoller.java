@@ -14,8 +14,7 @@ import java.time.format.DateTimeParseException;
  *
  * @author adria
  */
-public class PatientController {
-
+public class DoctorContoller {
     public static Response createPatient(String id, String username, String firstname, String lastname, String password, String comPassword, String email, String birthdate, String gender, String phone, String address) {
 
         try {
