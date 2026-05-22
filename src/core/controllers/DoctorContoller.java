@@ -8,6 +8,7 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.model.DataRepository;
 import core.model.Specialty;
+import core.model.User;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -88,7 +89,7 @@ public class DoctorContoller {
                 return new Response("Doctor with those cretentials already exists", Status.BAD_REQUEST);
             }
 
-            return new Response("Patient created successfully", Status.CREATED);
+            return new Response("Doctor created successfully", Status.CREATED);
 
         } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
@@ -107,6 +108,13 @@ public class DoctorContoller {
             if (username.trim().equals("")) {
                 return new Response("Username must not be empty", Status.BAD_REQUEST);
             }
+            
+            DataRepository storage = DataRepository.getInstance();
+            User user = storage.getUserByUsername(username);
+            if (user == null){
+                return new Response("User not found",Status.NOT_FOUND);
+            }
+            
             if (firstname.trim().equals("")) {
                 return new Response("Firstname must not be empty", Status.BAD_REQUEST);
             }
@@ -161,12 +169,8 @@ public class DoctorContoller {
                 return new Response("Password and password comfirmation must be the same", Status.BAD_REQUEST);
             }
 
-            DataRepository storage = DataRepository.getInstance();
-            if (!storage.addDoctor(longId, username, firstname, lastname, password, license, dSpecialty, office)) {
-                return new Response("Doctor with those cretentials already exists", Status.BAD_REQUEST);
-            }
-
-            return new Response("Patient created successfully", Status.CREATED);
+            storage.updateDoctor(username, firstname, lastname, password, dSpecialty, license, office);
+            return new Response("Doctor updated successfully", Status.OK);
 
         } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
