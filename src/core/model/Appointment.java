@@ -28,20 +28,6 @@ public class Appointment {
     private String followUp;
 
     public Appointment(String id, Patient patient, Doctor doctor, Specialty specialty, LocalDateTime datetime, String reason, boolean type) {
-        
-        if (datetime != null) {
-            int minute = datetime.getMinute();
-            if (minute != 0 && minute != 15 && minute != 30 && minute != 45) {
-                throw new IllegalArgumentException("Los minutos de la cita deben estar en cuartos de hora (:00, :15, :30, :45).");
-            }
-        }
-
-        if (doctor != null && specialty != null) {
-            if (!doctor.getSpecialty().equals(specialty)) {
-                throw new IllegalArgumentException("La especialidad de la cita no coincide con la especialidad del doctor asignado.");
-            }
-        }
-
         this.id = id;
         this.patient = patient;
         this.doctor = doctor;
@@ -77,6 +63,10 @@ public class Appointment {
         return reason;
     }
 
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     public boolean isType() {
         return type;
     }
@@ -85,54 +75,47 @@ public class Appointment {
         return status;
     }
 
+    public void setStatus(AppointmentStatus status) {
+        this.status = status;
+    }
+
     public String getDiagnosis() {
         return diagnosis;
-    }
-
-    public String getObservations() {
-        return observations;
-    }
-
-    public String getRecommendedTreatment() {
-        return recommendedTreatment;
-    }
-
-    public String getFollowUp() {
-        return followUp;
-    }
-
-    public ArrayList<prescription> getPrescriptions() {
-        return prescriptions;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
     }
 
     public void setDiagnosis(String diagnosis) {
         this.diagnosis = diagnosis;
     }
 
+    public String getObservations() {
+        return observations;
+    }
+
     public void setObservations(String observations) {
         this.observations = observations;
+    }
+
+    public String getRecommendedTreatment() {
+        return recommendedTreatment;
     }
 
     public void setRecommendedTreatment(String recommendedTreatment) {
         this.recommendedTreatment = recommendedTreatment;
     }
 
+    public String getFollowUp() {
+        return followUp;
+    }
+
     public void setFollowUp(String followUp) {
         this.followUp = followUp;
     }
 
-    public void setStatus(AppointmentStatus status) {
-        this.status = status;
+    public ArrayList<prescription> getPrescriptions() {
+        return prescriptions;
     }
 
     public boolean addPrescription(prescription prescrip) {
-        if (this.status != AppointmentStatus.PENDING) {
-            throw new IllegalStateException("Solo se pueden agregar recetas médicas si la cita está en estado PENDING.");
-        }
         return this.prescriptions.add(prescrip);
     }
     
