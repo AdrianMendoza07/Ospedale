@@ -67,7 +67,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         PasswordConfirmationAdminTextField = new javax.swing.JTextField();
         SpecialtyAdminComboBox = new javax.swing.JComboBox<>();
-        SaveAdminButton = new javax.swing.JButton();
+        SaveDoctorInAdminViewButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         DoctorComboBox = new javax.swing.JComboBox<>();
         jLabel13 = new javax.swing.JLabel();
@@ -189,11 +189,11 @@ public class NewJFrame11 extends javax.swing.JFrame {
         SpecialtyAdminComboBox.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         SpecialtyAdminComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select one", "General Medicine", "Cardiology", "Pediatrics", "Neurology", "Traumatology & Orthopedics", "Gynecology & Obstetrics", "Dermatology", "Psychiatry", "Oncology", "Ophthalmology", "Internal Medicine" }));
 
-        SaveAdminButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        SaveAdminButton.setText("Save");
-        SaveAdminButton.addActionListener(new java.awt.event.ActionListener() {
+        SaveDoctorInAdminViewButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        SaveDoctorInAdminViewButton.setText("Save");
+        SaveDoctorInAdminViewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SaveAdminButtonActionPerformed(evt);
+                SaveDoctorInAdminViewButtonActionPerformed(evt);
             }
         });
 
@@ -229,7 +229,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
                 .addGroup(panelRound3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelRound3Layout.createSequentialGroup()
                         .addGap(326, 326, 326)
-                        .addComponent(SaveAdminButton)
+                        .addComponent(SaveDoctorInAdminViewButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panelRound3Layout.createSequentialGroup()
                         .addGap(32, 32, 32)
@@ -352,7 +352,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
                         .addGap(43, 43, 43)
                         .addComponent(DoctorViewButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
-                .addComponent(SaveAdminButton)
+                .addComponent(SaveDoctorInAdminViewButton)
                 .addGap(123, 123, 123)
                 .addComponent(LogoutButton)
                 .addGap(38, 38, 38))
@@ -413,7 +413,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void SaveAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveAdminButtonActionPerformed
+    private void SaveDoctorInAdminViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveDoctorInAdminViewButtonActionPerformed
         String firstname = FirstnameAdminTextField.getText();
         String lastname = LastnameAdminTextField.getText();
         String id = IDAdminTextField.getText();
@@ -445,7 +445,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
             
         }
         
-    }//GEN-LAST:event_SaveAdminButtonActionPerformed
+    }//GEN-LAST:event_SaveDoctorInAdminViewButtonActionPerformed
 
     private void DoctorViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DoctorViewButtonActionPerformed
         long idDoctor = Long.parseLong(DoctorComboBox.getItemAt(DoctorComboBox.getSelectedIndex()));
@@ -494,7 +494,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
     private javax.swing.JTextField PasswordConfirmationAdminTextField;
     private javax.swing.JComboBox<String> PatientComboBox;
     private javax.swing.JButton PatientViewButton;
-    private javax.swing.JButton SaveAdminButton;
+    private javax.swing.JButton SaveDoctorInAdminViewButton;
     private javax.swing.JComboBox<String> SpecialtyAdminComboBox;
     private javax.swing.JTextField UserAdminTextField;
     private javax.swing.JButton jButton1;
