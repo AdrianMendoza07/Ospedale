@@ -20,35 +20,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 
-/**
- *
- * @author adria
- */
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package core.controllers;
-
-import core.controllers.utils.Response;
-import core.controllers.utils.Status;
-import core.model.Appointment;
-import core.model.AppointmentStatus;
-import core.model.DataRepository;
-import core.model.Doctor;
-import core.model.Patient;
-import core.model.Specialty;
-import core.model.JsonManager;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
-import java.util.HashMap;
-
-/**
- *
- * @author adria
- */
 public class AppointmentController {
 
     public static Response getAllSpecialties() {
@@ -88,18 +59,30 @@ public class AppointmentController {
             Boolean booleanType;
 
             typeSpecialty = switch (specialty.trim()) {
-                case "GENERAL_MEDICINE" -> Specialty.GENERAL_MEDICINE;
-                case "CARDIOLOGY" -> Specialty.CARDIOLOGY;
-                case "PEDIATRICS" -> Specialty.PEDIATRICS;
-                case "NEUROLOGY" -> Specialty.NEUROLOGY;
-                case "TRAUMATOLOGY_ORTHOPEDICS" -> Specialty.TRAUMATOLOGY_ORTHOPEDICS;
-                case "GYNECOLOGY_OBSTETRICS" -> Specialty.GYNECOLOGY_OBSTETRICS;
-                case "DERMATOLOGY" -> Specialty.DERMATOLOGY;
-                case "PSYCHIATRY" -> Specialty.PSYCHIATRY;
-                case "ONCOLOGY" -> Specialty.ONCOLOGY;
-                case "OPHTHALMOLOGY" -> Specialty.OPHTHALMOLOGY;
-                case "INTERNAL_MEDICINE" -> Specialty.INTERNAL_MEDICINE;
-                default -> null;
+                case "GENERAL_MEDICINE" ->
+                    Specialty.GENERAL_MEDICINE;
+                case "CARDIOLOGY" ->
+                    Specialty.CARDIOLOGY;
+                case "PEDIATRICS" ->
+                    Specialty.PEDIATRICS;
+                case "NEUROLOGY" ->
+                    Specialty.NEUROLOGY;
+                case "TRAUMATOLOGY_ORTHOPEDICS" ->
+                    Specialty.TRAUMATOLOGY_ORTHOPEDICS;
+                case "GYNECOLOGY_OBSTETRICS" ->
+                    Specialty.GYNECOLOGY_OBSTETRICS;
+                case "DERMATOLOGY" ->
+                    Specialty.DERMATOLOGY;
+                case "PSYCHIATRY" ->
+                    Specialty.PSYCHIATRY;
+                case "ONCOLOGY" ->
+                    Specialty.ONCOLOGY;
+                case "OPHTHALMOLOGY" ->
+                    Specialty.OPHTHALMOLOGY;
+                case "INTERNAL_MEDICINE" ->
+                    Specialty.INTERNAL_MEDICINE;
+                default ->
+                    null;
             };
 
             if (typeSpecialty == null) {
@@ -130,9 +113,12 @@ public class AppointmentController {
             }
 
             booleanType = switch (type.trim()) {
-                case "Remote" -> true;
-                case "In-person" -> false;
-                default -> null;
+                case "Remote" ->
+                    true;
+                case "In-person" ->
+                    false;
+                default ->
+                    null;
             };
 
             if (booleanType == null) {
@@ -152,11 +138,11 @@ public class AppointmentController {
             String appointmentId = String.format("A-%d-%04d", patientId, consecutivo);
 
             Appointment appointment = new Appointment(appointmentId, p, d, typeSpecialty, datetime, reason, booleanType);
-            
+
             p.addAppointment(appointment);
             d.addAppointment(appointment); // Enlazamos también al doctor
             storage.addAppointment(appointment);
-            
+
             return new Response("Appointment created succesfully", Status.CREATED);
 
         } catch (Exception e) {
@@ -203,9 +189,12 @@ public class AppointmentController {
             }
 
             booleanType = switch (type) {
-                case "Remote" -> true;
-                case "In-Person" -> false;
-                default -> null;
+                case "Remote" ->
+                    true;
+                case "In-Person" ->
+                    false;
+                default ->
+                    null;
             };
 
             if (booleanType == null) {
@@ -224,11 +213,11 @@ public class AppointmentController {
             String appointmentId = String.format("A-%d-%04d", patientId, consecutivo);
 
             Appointment appointment = new Appointment(appointmentId, p, d, d.getSpecialty(), datetime, reason, booleanType);
-            
+
             p.addAppointment(appointment);
-            d.addAppointment(appointment); 
+            d.addAppointment(appointment);
             storage.addAppointment(appointment);
-            
+
             return new Response("Appointment created succesfully", Status.CREATED);
 
         } catch (Exception e) {
@@ -354,10 +343,8 @@ public class AppointmentController {
         }
         return new Response("Appointments loaded sucessfully", Status.OK, appointmentMap);
     }
-    
-    public static Response loadPatientAppointmentHistoryForPatientView(String username) {
 
-        
+    public static Response loadPatientAppointmentHistoryForPatientView(String username) {
 
         DataRepository storage = DataRepository.getInstance();
         Patient p = storage.getPatientByUsername(username);
@@ -408,35 +395,33 @@ public class AppointmentController {
 
         return new Response("Appointment ids loaded sucessfully", Status.OK, appointmentMap);
     }
-    
-    public static Response cancelAppointment(String username, String apId, String observations){
-        
+
+    public static Response cancelAppointment(String username, String apId, String observations) {
+
         try {
-            
+
             Response r = AppointmentController.loadPendingPatientAppointments(username);
             HashMap<String, Object> pendingAp = r.getData();
-            
-            if(!pendingAp.containsKey(apId)){
+
+            if (!pendingAp.containsKey(apId)) {
                 return new Response("Not a valid id", Status.BAD_REQUEST);
             }
-            
-            if(observations.trim().equals("")){
-                return new Response("Observations can not be empty",Status.BAD_REQUEST);
+
+            if (observations.trim().equals("")) {
+                return new Response("Observations can not be empty", Status.BAD_REQUEST);
             }
-            
+
             DataRepository storage = DataRepository.getInstance();
             storage.getAppointment(apId).setStatus(AppointmentStatus.CANCELED);
-            
+
             return new Response("Appointment cancelled sucessfully", Status.OK);
-            
+
         } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
-        
-    }
-}
 
     }
+
     public static Response acceptAppointment(String appointmentId) {
         try {
             if (appointmentId == null || appointmentId.trim().isEmpty() || appointmentId.equals("Select one")) {
