@@ -94,6 +94,8 @@ public class AppointmentController {
                 return new Response("Not a valid time", Status.BAD_REQUEST);
 
             }
+            
+            datetime = LocalDateTime.of(date, time);
 
             if (reason.trim().equals("")) {
                 return new Response("Reason can not be empty", Status.BAD_REQUEST);
