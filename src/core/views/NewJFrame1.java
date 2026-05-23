@@ -4,10 +4,12 @@
  */
 package core.views;
 
+import core.controllers.AppointmentController;
 import core.controllers.PatientController;
 import core.controllers.utils.Response;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,6 +22,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
 
     private int x, y;
     private String currentUsername;
+    private HashMap<String, String> mapaDoctoresCargados = new HashMap<>();
 
     public NewJFrame1(String username, String role) {
         initComponents();
@@ -830,9 +833,14 @@ public class NewJFrame1 extends javax.swing.JFrame {
         SelectComboBox.removeAllItems();
         SelectComboBox.addItem("Select one");
 
-        ArrayList<String> specialties = appointmentController.getAllSpecialties();
-        for (String spec : specialties) {
-            SelectComboBox.addItem(spec);
+        Response response = AppointmentController.getAllSpecialties();
+
+        if (response.getStatus() == 200 && response.getData() != null) {
+            HashMap<String, Object> specialtiesMap = response.getData();
+
+            for (Object specName : specialtiesMap.values()) {
+                SelectComboBox.addItem(String.valueOf(specName));
+            }
         }
 
     }//GEN-LAST:event_SpecialtyRadioButtonActionPerformed
@@ -843,10 +851,26 @@ public class NewJFrame1 extends javax.swing.JFrame {
         }
         SelectComboBox.removeAllItems();
         SelectComboBox.addItem("Select one");
-        
-        ArrayList<String> doctorNames = appointmentController.getAllDoctorNames();
-        for (String name : doctorNames) {
-            SelectComboBox.addItem(name);
+
+        mapaDoctoresCargados.clear();
+
+        Response response = AppointmentController.loadDoctors();
+
+        if (response.getStatus() == 200 && response.getData() != null) {
+            ArrayList<HashMap<String, Object>> doctorsList = (ArrayList<HashMap<String, Object>>) response.getData().get("doctorsList");
+
+            if (response.getStatus() == 200 && response.getData() != null) {
+                HashMap<String, Object> doctorsMap = response.getData();
+
+                for (Map.Entry<String, Object> entry : doctorsMap.entrySet()) {
+                    String idStr = entry.getKey();
+                    String nombreCompleto = String.valueOf(entry.getValue());
+
+                    mapaDoctoresCargados.put(idStr, nombreCompleto);
+
+                    SelectComboBox.addItem(nombreCompleto);
+                }
+            }
         }
     }//GEN-LAST:event_DoctorRadioButtonActionPerformed
 
@@ -854,17 +878,37 @@ public class NewJFrame1 extends javax.swing.JFrame {
         String appointDate = AppointmentDateTextField.getText();
         String appointmentTime = AppointmentTimeTextField.getText();
         String appointmentReason = AppointmentReasonTextArea.getText();
-        String selectedValue = SelectComboBox.getItemAt(SelectComboBox.getSelectedIndex());
+        String nombreSeleccionado = SelectComboBox.getItemAt(SelectComboBox.getSelectedIndex());
         String appointmentType = ApointmentTypeComboBox.getItemAt(ApointmentTypeComboBox.getSelectedIndex());
 
-        Doctor doctor = null;
-        for (User use : this.users) {
-            if (use.getId() == docId) {
-                doctor = (Doctor) use;
+        Response response;
+
+        if (SpecialtyRadioButton.isSelected()) {
+            response = AppointmentController.createAppointmentBySpecialty(this.currentUsername, nombreSeleccionado, appointDate, appointmentTime, appointmentReason, appointmentType);
+        } else {
+            String idDoctorEncontrado = null;
+            for (Map.Entry<String, String> entry : mapaDoctoresCargados.entrySet()) {
+                if (entry.getValue().equals(nombreSeleccionado)) {
+                    idDoctorEncontrado = entry.getKey();
+                    break;
+                }
             }
+            response = AppointmentController.createAppointmentByDoctor(this.currentUsername, idDoctorEncontrado, appointDate, appointmentTime, appointmentReason, appointmentType);
         }
-        boolean appointmentType = (ApointmentTypeComboBox.getSelectedIndex() == 0 ? null : (ApointmentTypeComboBox.getSelectedIndex() == 2));
-        this.appointments.add(new Appointment(appointDate, patient, doctor, doctor.getSpecialty(), Finally, appointDate, appointmentType));
+
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Atención", JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Cita Agendada", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        AppointmentDateTextField.setText("");
+        AppointmentTimeTextField.setText("");
+        AppointmentReasonTextArea.setText("");
+        SelectComboBox.setSelectedIndex(0);
+
     }//GEN-LAST:event_CreateAppointmentButtonActionPerformed
 
 
