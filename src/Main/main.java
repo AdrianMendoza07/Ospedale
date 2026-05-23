@@ -7,6 +7,7 @@ package Main;
 import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.UIManager;
 import core.views.NewJFrame;
+import core.model.DataRepository; // Importamos tu repositorio
 
 /**
  *
@@ -24,7 +25,6 @@ public class main {
         } catch (Exception ex) {
             System.err.println("Failed to initialize LaF");
         }
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new NewJFrame().setVisible(true);

@@ -3,10 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package core.model;
+
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+
 /**
  *
  * @author tefy1
@@ -26,13 +28,24 @@ public class DataRepository {
     private ArrayList<Administrator> administrators;
     private ArrayList<Appointment> appointments;
     private ArrayList<Hospitalization> hospitalizations;
-
     private DataRepository() {
         this.patients = new ArrayList<>();
         this.doctors = new ArrayList<>();
         this.administrators = new ArrayList<>();
         this.appointments = new ArrayList<>();
         this.hospitalizations = new ArrayList<>();
+        this.initializeBaseData();
+    }
+
+
+    private void initializeBaseData() {
+        System.out.println("Iniciando carga desde archivo centralizado 'users.json'...");
+        try {
+            JsonManager jsonManager = new JsonManager(this);
+            jsonManager.loadAllDataFromJson("users.json");
+        } catch (Exception e) {
+            System.out.println("Advertencia al inicializar la base de datos unificada: " + e.getMessage());
+        }
     }
 
     public ArrayList<Patient> getPatients() { return patients; }
@@ -40,8 +53,6 @@ public class DataRepository {
     public ArrayList<Administrator> getAdministrators() { return administrators; }
     public ArrayList<Appointment> getAppointments() { return appointments; }
     public ArrayList<Hospitalization> getHospitalizations() { return hospitalizations; }
-
-    
     public Patient findPatientById(long id) {
         for (Patient p : patients) {
             if (p.getId() == id) return p;
@@ -64,7 +75,6 @@ public class DataRepository {
         }
         return null;
     }
-
     public User getUserByUsername(String username) {
         if (username == null) return null;
         for (Patient p : patients) {
@@ -94,11 +104,9 @@ public class DataRepository {
         }
         return null;
     }
-
-
     public boolean addPatient(long longId, String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
         if (findUserById(longId) != null || getUserByUsername(username) != null) {
-            return false;
+            return false; 
         }
         Patient target = new Patient(longId, username, firstname, lastname, password, email, dateBirthdate, boolGender, longPhone, address);
         this.patients.add(target);
@@ -136,7 +144,7 @@ public class DataRepository {
 
     public boolean addDoctor(long longId, String username, String firstname, String lastname, String password, String licenceNumber, Specialty specialty, String assignedOffice) {
         if (findUserById(longId) != null || getUserByUsername(username) != null) {
-            return false;
+            return false; // ID o Username repetido
         }
         Doctor target = new Doctor(longId, username, firstname, lastname, password, licenceNumber, specialty, assignedOffice);
         this.doctors.add(target);
@@ -248,14 +256,13 @@ public class DataRepository {
         }
         return true; 
     }
-
     public HashMap<String, Object> patientToMap(Patient p) {
         if (p == null) return null;
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", p.getId());
         map.put("username", p.getUsername());
         map.put("firstname", p.getFirstname());
-        map.put("lastname", p.lastname());
+        map.put("lastname", p.getLastname());
         map.put("email", p.getEmail());
         map.put("birthdate", p.getBirthdate());
         map.put("gender", p.isGender() ? "Femenino" : "Masculino");
@@ -293,4 +300,3 @@ public class DataRepository {
         return listaMapeada;
     }
 }
-
