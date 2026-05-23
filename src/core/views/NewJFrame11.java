@@ -442,7 +442,9 @@ public class NewJFrame11 extends javax.swing.JFrame {
             UserAdminTextField.setText("");
             PasswordAdminTextField.setText("");
             PasswordConfirmationAdminTextField.setText("");
+            
         }
+        
     }//GEN-LAST:event_SaveAdminButtonActionPerformed
 
     private void DoctorViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DoctorViewButtonActionPerformed
