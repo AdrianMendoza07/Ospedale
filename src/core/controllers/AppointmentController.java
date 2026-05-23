@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 
 /**
  *
@@ -22,16 +23,40 @@ import java.time.format.DateTimeParseException;
  */
 public class AppointmentController {
 
-    /**
-     *
-     * @param username
-     * @param specialty
-     * @param appointmentDate
-     * @param AppointmentTime
-     * @param reason
-     * @param type
-     * @return
-     */
+    public static Response getAllSpecialties() {
+        // Creamos el HashMap que exige tu clase Response <Clave, Valor>
+        HashMap<String, Object> especialidadesMap = new HashMap<>();
+
+        // Recorremos los valores de tu Enum
+        for (Specialty esp : Specialty.values()) {
+            String nombreEspecialidad = esp.name(); // Ejemplo: "CARDIOLOGY"
+
+            // Guardamos la especialidad en el mapa
+            especialidadesMap.put(nombreEspecialidad, nombreEspecialidad);
+        }
+
+        // Retornamos el HashMap dentro de tu Response habitual
+        return new Response("Specialties loaded sucessfully", Status.OK, especialidadesMap);
+
+    }
+
+    public Response loadDoctors() {
+        DataRepository storage = DataRepository.getInstance();
+
+        // Creamos el mapa que viajará a la vista: <String ID, String Nombre>
+        HashMap<String, Object> doctoresMap = new HashMap<>();
+
+        // Recorremos los doctores reales del repositorio
+        for (Doctor doc : storage.getDoctors()) {
+            String idStr = String.valueOf(doc.getId());
+            String nombreCompleto = "Dr. " + doc.getFirstname() + " " + doc.getLastname();
+
+            doctoresMap.put(idStr, nombreCompleto);
+        }
+
+        return new Response("Doctors loaded sucessfully", Status.OK, doctoresMap);
+    }
+
     public static Response createAppointmentBySpecialty(String username, String specialty, String appointmentDate, String AppointmentTime, String reason, String type) {
 
         try {
@@ -94,7 +119,7 @@ public class AppointmentController {
                 return new Response("Not a valid time", Status.BAD_REQUEST);
 
             }
-            
+
             datetime = LocalDateTime.of(date, time);
 
             if (reason.trim().equals("")) {
@@ -120,7 +145,7 @@ public class AppointmentController {
             Patient p = storage.getPatientByUsername(username);
 
             //Buscamos si existe un doctor valido
-            Doctor d = storage.getDoctorBySpecialty(typeSpecialty, date);
+            Doctor d = storage.findAvailableDoctorBySpecialty(typeSpecialty, datetime);
             if (d == null) {
                 return new Response("No hay doctores disponibles con esa especialidad en esa fecha", Status.BAD_REQUEST);
             }
@@ -140,48 +165,14 @@ public class AppointmentController {
 
     }
 
+    //
     public static Response createAppointmentByDoctor(String username, String doctor, String appointmentDate, String AppointmentTime, String reason, String type) {
 
         try {
-            Specialty typeSpecialty;
             LocalDate date;
             LocalTime time;
             LocalDateTime datetime;
             Boolean booleanType;
-
-            //Parseamos la especialidad a Specialty
-            typeSpecialty = switch (specialty.trim()) {
-                case "GENERAL_MEDICINE" ->
-                    Specialty.GENERAL_MEDICINE;
-                case "CARDIOLOGY" ->
-                    Specialty.CARDIOLOGY;
-                case "PEDIATRICS" ->
-                    Specialty.PEDIATRICS;
-                case "NEUROLOGY" ->
-                    Specialty.NEUROLOGY;
-                case "TRAUMATOLOGY_ORTHOPEDICS" ->
-                    Specialty.TRAUMATOLOGY_ORTHOPEDICS;
-                case "GYNECOLOGY_OBSTETRICS" ->
-                    Specialty.GYNECOLOGY_OBSTETRICS;
-                case "DERMATOLOGY" ->
-                    Specialty.DERMATOLOGY;
-                case "PSYCHIATRY" ->
-                    Specialty.PSYCHIATRY;
-                case "ONCOLOGY" ->
-                    Specialty.ONCOLOGY;
-                case "OPHTHALMOLOGY" ->
-                    Specialty.OPHTHALMOLOGY;
-                case "INTERNAL_MEDICINE" ->
-                    Specialty.INTERNAL_MEDICINE;
-
-                default ->
-                    null;
-
-            };
-            //Revisamos que se haya elegido especialidad
-            if (typeSpecialty == null) {
-                return new Response("Debe seleccionar una especialidad médica válida.", Status.BAD_REQUEST);
-            }
 
             //Revisamos fecha valida
             try {
@@ -226,7 +217,7 @@ public class AppointmentController {
             Patient p = storage.getPatientByUsername(username);
 
             //Buscamos si existe un doctor valido
-            Doctor d = storage.getDoctorBySpecialty(typeSpecialty, date);
+            Doctor d = storage.findAvailableDoctorBySpecialty(typeSpecialty, datetime);
             if (d == null) {
                 return new Response("No hay doctores disponibles con esa especialidad en esa fecha", Status.BAD_REQUEST);
             }
