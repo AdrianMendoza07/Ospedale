@@ -78,6 +78,20 @@ public class DataRepository {
         }
         return null;
     }
+    public Patient getPatientByUsername(String username) {
+        if (username == null) return null;
+        for (Patient p : patients) {
+            if (p.getUsername().equalsIgnoreCase(username)) return p;
+        }
+        return null;
+    }
+    public Doctor getDoctorByUsername(String username) {
+        if (username == null) return null;
+        for (Doctor d : doctors) {
+            if (d.getUsername().equalsIgnoreCase(username)) return d;
+        }
+        return null;
+    }
 
 
     public boolean addPatient(long longId, String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
@@ -88,10 +102,13 @@ public class DataRepository {
         this.patients.add(target);
         return true;
     }
-
-    public boolean updatePatient(String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
-        User target = getUserByUsername(username);
+    public boolean updatePatient(long longId, String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
+        Patient target = findPatientById(longId);
         if (target != null) {
+            Patient existente = getPatientByUsername(username);
+            if (existente != null && existente.getId() != longId) {
+                return false; 
+            }
             
             target.setUsername(username);
             target.setFirstname(firstname);
@@ -179,7 +196,6 @@ public class DataRepository {
         return filtradas;
     }
 
-
     public int getNextAppointmentConsecutive(long patientId) {
         int contador = 0;
         for (Appointment app : this.appointments) {
@@ -193,6 +209,7 @@ public class DataRepository {
     public Doctor findAvailableDoctorBySpecialty(Specialty specialty, LocalDateTime dateTime) {
         for (Doctor doc : this.doctors) {
             if (doc.getSpecialty() == specialty) {
+
                 boolean estaOcupado = false;
                 for (Appointment app : this.appointments) {
                     if (app.getDoctor() != null && app.getDoctor().getId() == doc.getId() && app.getDatetime().equals(dateTime)) {
@@ -208,7 +225,7 @@ public class DataRepository {
         }
         return null; 
     }
-     
+
     public boolean isDoctorAvailableById(long doctorId, LocalDateTime dateTime) {
         Doctor doc = findDoctorById(doctorId);
         if (doc == null) {
