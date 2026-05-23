@@ -9,12 +9,8 @@ import core.controllers.AuthController;
 import core.controllers.PatientController;
 import core.controllers.utils.Response;
 import java.awt.Color;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 
 /**
  *

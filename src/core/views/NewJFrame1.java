@@ -6,20 +6,7 @@ package core.views;
 
 import core.controllers.PatientController;
 import core.controllers.utils.Response;
-import core.model.Administrator;
-import core.model.Appointment;
-import core.model.AppointmentStatus;
-import core.model.Doctor;
-import core.model.Hospitalization;
-import core.model.Patient;
-import core.model.RoomType;
-import core.model.Specialty;
-import core.model.User;
 import java.awt.Color;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
