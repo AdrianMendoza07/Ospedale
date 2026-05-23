@@ -10,6 +10,7 @@ import core.model.Appointment;
 import core.model.AppointmentStatus;
 import core.model.DataRepository;
 import core.model.Doctor;
+import core.model.JsonManager;
 import core.model.prescription;
 import java.util.HashMap;
 
@@ -84,8 +85,17 @@ public class PrescriptionController {
 
             DataRepository storage = DataRepository.getInstance();
             Appointment ap = storage.getAppointment(appointmentId);
+            
+            if (ap == null) {
+                return new Response("The selected appointment does not exist.", Status.NOT_FOUND);
+            }
+            
             prescription p = new prescription(ap, name, dDose, administrationRoute, intDuration, instructions, intFrecuency);
             storage.addPrescription(p);
+            
+            JsonManager jsonManager = new JsonManager(storage);
+            jsonManager.saveAllDataToJson("json/users.json");
+            
             return new Response("Prescription created sucessfully", Status.CREATED);
 
         } catch (Exception e) {

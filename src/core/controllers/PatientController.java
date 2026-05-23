@@ -7,6 +7,7 @@ package core.controllers;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.model.DataRepository;
+import core.model.JsonManager;
 import core.model.Patient;
 import core.model.User;
 import java.time.LocalDate;
@@ -75,7 +76,7 @@ public class PatientController {
                     return new Response("Phone must be positive.", Status.BAD_REQUEST);
                 }
                 if (phone.length() != 10) {
-                    return new Response("Phone must have 12 digits.", Status.BAD_REQUEST);
+                    return new Response("Phone must have 10 digits.", Status.BAD_REQUEST);
                 }
 
             } catch (NumberFormatException e) {
@@ -113,6 +114,9 @@ public class PatientController {
             if (!storage.addPatient(longId, username, firstname, lastname, password, email, dateBirthdate, boolGender, longPhone, address)) {
                 return new Response("Patient with those cretentials already exists", Status.BAD_REQUEST);
             }
+            
+            JsonManager jsonManager = new JsonManager(storage);
+            jsonManager.saveAllDataToJson("json/users.json");
 
             return new Response("Patient created successfully", Status.CREATED);
 
@@ -133,8 +137,8 @@ public class PatientController {
             }
 
             DataRepository storage = DataRepository.getInstance();
-            User user = storage.getUserByUsername(username);
-            if (user == null) {
+            Patient p = storage.getPatientByUsername(username);
+            if (p == null) {
                 return new Response("User not found", Status.NOT_FOUND);
             }
 
@@ -166,7 +170,7 @@ public class PatientController {
                     return new Response("Phone must be positive.", Status.BAD_REQUEST);
                 }
                 if (phone.length() != 10) {
-                    return new Response("Phone must have 12 digits.", Status.BAD_REQUEST);
+                    return new Response("Phone must have 10 digits.", Status.BAD_REQUEST);
                 }
 
             } catch (NumberFormatException e) {
@@ -195,6 +199,10 @@ public class PatientController {
             bGender = !gender.equals("Female");
 
             storage.updatePatient(username, firstname, lastname, password, email, dBirthdate, bGender, lPhone, address);
+            
+            JsonManager jsonManager = new JsonManager(storage);
+            jsonManager.saveAllDataToJson("json/users.json");
+            
             return new Response("Patient updated successfully", Status.OK);
 
         } catch (Exception e) {

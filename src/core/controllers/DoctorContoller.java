@@ -7,6 +7,8 @@ package core.controllers;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.model.DataRepository;
+import core.model.Doctor;
+import core.model.JsonManager;
 import core.model.Specialty;
 import core.model.User;
 import java.time.LocalDate;
@@ -24,26 +26,32 @@ public class DoctorContoller {
             long longId;
             Specialty dSpecialty;
 
-            if (id.trim().equals("")) {
+            if (id == null || id.trim().isEmpty()) {
                 return new Response("Id must not be empty", Status.BAD_REQUEST);
             }
-            if (username.trim().equals("")) {
+            if (username == null || username.trim().isEmpty()) {
                 return new Response("Username must not be empty", Status.BAD_REQUEST);
             }
-            if (firstname.trim().equals("")) {
+            if (firstname == null || firstname.trim().isEmpty()) {
                 return new Response("Firstname must not be empty", Status.BAD_REQUEST);
             }
-            if (lastname.trim().equals("")) {
+            if (lastname == null || lastname.trim().isEmpty()) {
                 return new Response("Lastname must not be empty", Status.BAD_REQUEST);
             }
-            if (password.trim().equals("")) {
+            if (password == null || password.trim().isEmpty()) {
                 return new Response("Password must not be empty", Status.BAD_REQUEST);
             }
-            if (comPassword.trim().equals("")) {
-                return new Response("Password comfirmation must not be empty", Status.BAD_REQUEST);
+            if (comPassword == null || comPassword.trim().isEmpty()) {
+                return new Response("Password confirmation must not be empty", Status.BAD_REQUEST);
             }
-            if (inSpecialty.trim().equals("Select one")) {
-                return new Response("Must choose an option", Status.BAD_REQUEST);
+            if (inSpecialty == null || inSpecialty.trim().equals("Select one") || inSpecialty.trim().isEmpty()) {
+                return new Response("Must choose an option for specialty", Status.BAD_REQUEST);
+            }
+            if (license == null || license.trim().isEmpty()) {
+                return new Response("License must not be empty", Status.BAD_REQUEST);
+            }
+            if (office == null || office.trim().isEmpty()) {
+                return new Response("Office number must not be empty", Status.BAD_REQUEST);
             }
 
             try {
@@ -89,6 +97,9 @@ public class DoctorContoller {
                 return new Response("Doctor with those cretentials already exists", Status.BAD_REQUEST);
             }
 
+            JsonManager jsonManager = new JsonManager(storage);
+            jsonManager.saveAllDataToJson("json/users.json");
+
             return new Response("Doctor created successfully", Status.CREATED);
 
         } catch (Exception e) {
@@ -101,30 +112,36 @@ public class DoctorContoller {
         try {
             Specialty dSpecialty;
 
-            if (username.trim().equals("")) {
+            if (username == null || username.trim().equals("")) {
                 return new Response("Username must not be empty", Status.BAD_REQUEST);
             }
 
             DataRepository storage = DataRepository.getInstance();
-            User user = storage.getUserByUsername(username);
-            if (user == null) {
+            Doctor d = storage.getDoctorByUsername(username);
+            if (d == null) {
                 return new Response("User not found", Status.NOT_FOUND);
             }
 
-            if (firstname.trim().equals("")) {
+            if (firstname == null || firstname.trim().isEmpty()) {
                 return new Response("Firstname must not be empty", Status.BAD_REQUEST);
             }
-            if (lastname.trim().equals("")) {
+            if (lastname == null || lastname.trim().isEmpty()) {
                 return new Response("Lastname must not be empty", Status.BAD_REQUEST);
             }
-            if (password.trim().equals("")) {
+            if (password == null || password.trim().isEmpty()) {
                 return new Response("Password must not be empty", Status.BAD_REQUEST);
             }
-            if (comPassword.trim().equals("")) {
-                return new Response("Password comfirmation must not be empty", Status.BAD_REQUEST);
+            if (comPassword == null || comPassword.trim().isEmpty()) {
+                return new Response("Password confirmation must not be empty", Status.BAD_REQUEST);
             }
-            if (inSpecialty.trim().equals("Select one")) {
-                return new Response("Must choose an option", Status.BAD_REQUEST);
+            if (inSpecialty == null || inSpecialty.trim().equals("Select one") || inSpecialty.trim().isEmpty()) {
+                return new Response("Must choose a valid specialty option", Status.BAD_REQUEST);
+            }
+            if (license == null || license.trim().isEmpty()) {
+                return new Response("License must not be empty", Status.BAD_REQUEST);
+            }
+            if (office == null || office.trim().isEmpty()) {
+                return new Response("Office number must not be empty", Status.BAD_REQUEST);
             }
 
             try {
@@ -138,7 +155,6 @@ public class DoctorContoller {
             if (office.trim().equals("")) {
                 return new Response("Office number must not be empty", Status.BAD_REQUEST);
             }
-            
 
             String licenseRegex = "^L-\\d{10} MTL$";
             if (!license.trim().matches(licenseRegex)) {
@@ -155,6 +171,10 @@ public class DoctorContoller {
             }
 
             storage.updateDoctor(username, firstname, lastname, password, dSpecialty, license, office);
+            
+            JsonManager jsonManager = new JsonManager(storage);
+            jsonManager.saveAllDataToJson("json/users.json");
+            
             return new Response("Doctor updated successfully", Status.OK);
 
         } catch (Exception e) {

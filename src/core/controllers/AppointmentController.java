@@ -54,20 +54,32 @@ public class AppointmentController {
             Boolean booleanType;
 
             typeSpecialty = switch (specialty.trim()) {
-                case "GENERAL_MEDICINE" -> Specialty.GENERAL_MEDICINE;
-                case "CARDIOLOGY" -> Specialty.CARDIOLOGY;
-                case "PEDIATRICS" -> Specialty.PEDIATRICS;
-                case "NEUROLOGY" -> Specialty.NEUROLOGY;
-                case "TRAUMATOLOGY_ORTHOPEDICS" -> Specialty.TRAUMATOLOGY_ORTHOPEDICS;
-                case "GYNECOLOGY_OBSTETRICS" -> Specialty.GYNECOLOGY_OBSTETRICS;
-                case "DERMATOLOGY" -> Specialty.DERMATOLOGY;
-                case "PSYCHIATRY" -> Specialty.PSYCHIATRY;
-                case "ONCOLOGY" -> Specialty.ONCOLOGY;
-                case "OPHTHALMOLOGY" -> Specialty.OPHTHALMOLOGY;
-                case "INTERNAL_MEDICINE" -> Specialty.INTERNAL_MEDICINE;
-                default -> null;
+                case "GENERAL_MEDICINE" ->
+                    Specialty.GENERAL_MEDICINE;
+                case "CARDIOLOGY" ->
+                    Specialty.CARDIOLOGY;
+                case "PEDIATRICS" ->
+                    Specialty.PEDIATRICS;
+                case "NEUROLOGY" ->
+                    Specialty.NEUROLOGY;
+                case "TRAUMATOLOGY_ORTHOPEDICS" ->
+                    Specialty.TRAUMATOLOGY_ORTHOPEDICS;
+                case "GYNECOLOGY_OBSTETRICS" ->
+                    Specialty.GYNECOLOGY_OBSTETRICS;
+                case "DERMATOLOGY" ->
+                    Specialty.DERMATOLOGY;
+                case "PSYCHIATRY" ->
+                    Specialty.PSYCHIATRY;
+                case "ONCOLOGY" ->
+                    Specialty.ONCOLOGY;
+                case "OPHTHALMOLOGY" ->
+                    Specialty.OPHTHALMOLOGY;
+                case "INTERNAL_MEDICINE" ->
+                    Specialty.INTERNAL_MEDICINE;
+                default ->
+                    null;
             };
-            
+
             if (typeSpecialty == null) {
                 return new Response("Debe seleccionar una especialidad médica válida.", Status.BAD_REQUEST);
             }
@@ -95,15 +107,18 @@ public class AppointmentController {
             }
 
             booleanType = switch (type.trim()) {
-                case "Remote" -> true;
-                case "In-person" -> false;
-                default -> null;
+                case "Remote" ->
+                    true;
+                case "In-person" ->
+                    false;
+                default ->
+                    null;
             };
 
             if (booleanType == null) {
                 return new Response("Must choose a type", Status.BAD_REQUEST);
             }
-            
+
             DataRepository storage = DataRepository.getInstance();
             Patient p = storage.getPatientByUsername(username);
 
@@ -117,11 +132,14 @@ public class AppointmentController {
             String appointmentId = String.format("A-%d-%04d", patientId, consecutivo);
 
             Appointment appointment = new Appointment(appointmentId, p, d, typeSpecialty, datetime, reason, booleanType);
-            
+
             p.addAppointment(appointment);
             d.addAppointment(appointment);
             storage.addAppointment(appointment);
             
+            JsonManager jsonManager = new JsonManager(storage);
+            jsonManager.saveAllDataToJson("json/users.json");
+
             return new Response("Appointment created successfully", Status.CREATED);
 
         } catch (Exception e) {
@@ -166,15 +184,18 @@ public class AppointmentController {
             }
 
             booleanType = switch (type) {
-                case "Remote" -> true;
-                case "In-Person" -> false;
-                default -> null;
+                case "Remote" ->
+                    true;
+                case "In-Person" ->
+                    false;
+                default ->
+                    null;
             };
 
             if (booleanType == null) {
                 return new Response("Must choose a type", Status.BAD_REQUEST);
             }
-            
+
             DataRepository storage = DataRepository.getInstance();
             Patient p = storage.getPatientByUsername(username);
             Doctor d = storage.findDoctorById(longDoctorId);
@@ -188,18 +209,20 @@ public class AppointmentController {
             String appointmentId = String.format("A-%d-%04d", patientId, consecutivo);
 
             Appointment appointment = new Appointment(appointmentId, p, d, d.getSpecialty(), datetime, reason, booleanType);
-            
+
             p.addAppointment(appointment);
             d.addAppointment(appointment);
             storage.addAppointment(appointment);
             
+            JsonManager jsonManager = new JsonManager(storage);
+            jsonManager.saveAllDataToJson("json/users.json");
+
             return new Response("Appointment created successfully", Status.CREATED);
 
         } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     public static Response acceptAppointment(String appointmentId) {
         try {
@@ -220,7 +243,7 @@ public class AppointmentController {
                 return new Response("La cita médica especificada no existe.", Status.NOT_FOUND);
             }
 
-            if (targetAppointment.getStatus() == AppointmentStatus.PENDING) {
+            if (targetAppointment.getStatus() != AppointmentStatus.REQUESTED) {
                 return new Response("Esta cita ya ha sido aceptada previamente.", Status.BAD_REQUEST);
             }
 
@@ -236,9 +259,6 @@ public class AppointmentController {
         }
     }
 
-    /**
-     * COLUMNA 2: Reprogramar una cita médica con nueva fecha/hora y motivo.
-     */
     public static Response rescheduleAppointment(String appointmentId, String newDateStr, String newTimeStr, String newReason) {
         try {
             if (appointmentId == null || appointmentId.trim().isEmpty() || appointmentId.equals("Select one")) {
@@ -303,9 +323,6 @@ public class AppointmentController {
         }
     }
 
-    /**
-     * COLUMNA 3: Completar una cita médica registrando el diagnóstico y tratamiento.
-     */
     public static Response completeAppointment(String appointmentId, String diagnosis, String observations, String treatment, String followUp) {
         try {
             if (appointmentId == null || appointmentId.trim().isEmpty() || appointmentId.equals("Select one")) {
@@ -345,6 +362,54 @@ public class AppointmentController {
 
         } catch (Exception e) {
             return new Response("Error al completar la cita: " + e.getMessage(), Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public static Response cancelAppointment(String username, String appointmentId) {
+        try {
+            if (username == null || username.trim().isEmpty()) {
+                return new Response("User session is not valid.", Status.BAD_REQUEST);
+            }
+            if (appointmentId == null || appointmentId.trim().isEmpty() || appointmentId.equals("Select one")) {
+                return new Response("You must select a valid appointment ID to cancel.", Status.BAD_REQUEST);
+            }
+
+            DataRepository storage = DataRepository.getInstance();
+
+            Patient p = storage.getPatientByUsername(username);
+            if (p == null) {
+                return new Response("Patient profile not found in system.", Status.NOT_FOUND);
+            }
+
+            Appointment targetAppointment = null;
+            for (Appointment app : storage.getAppointments()) {
+                if (app.getId().equals(appointmentId.trim())) {
+                    targetAppointment = app;
+                    break;
+                }
+            }
+
+            if (targetAppointment == null) {
+                return new Response("The specified appointment does not exist.", Status.NOT_FOUND);
+            }
+
+            if (targetAppointment.getStatus() == AppointmentStatus.COMPLETED) {
+                return new Response("Cannot cancel an appointment that has already been completed.", Status.BAD_REQUEST);
+            }
+
+            if (targetAppointment.getStatus() == AppointmentStatus.CANCELED) {
+                return new Response("This appointment is already cancelled.", Status.BAD_REQUEST);
+            }
+
+            targetAppointment.setStatus(AppointmentStatus.CANCELED);
+
+            JsonManager jsonManager = new JsonManager(storage);
+            jsonManager.saveAllDataToJson("json/users.json");
+
+            return new Response("Appointment successfully cancelled and system updated.", Status.OK);
+
+        } catch (Exception e) {
+            return new Response("Error while cancelling the appointment: " + e.getMessage(), Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

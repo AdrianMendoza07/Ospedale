@@ -23,26 +23,24 @@ public class AuthController {
 
         try {
 
-            if (username.trim().equals("")) {
+            if (username == null || username.trim().equals("") ) {
                 return new Response("Username field cannot be empty.", Status.BAD_REQUEST);
             }
 
-            if (password.trim().equals("")) {
+            if (password == null || password.trim().equals("")) {
                 return new Response("Password field cannot be empty.", Status.BAD_REQUEST);
             }
 
             DataRepository storage = DataRepository.getInstance();
             User user = storage.getUserByUsername(username);
-            if (user == null) {
-                return new Response("Incorrect username or password", Status.UNAUTHORIZED);
+            if (user == null || !user.getPassword().equals(password)) {
+                return new Response("Incorrect username or password.", Status.UNAUTHORIZED);
             }
 
             if (user.getPassword().equals(password)) {
                 HashMap<String, Object> userData = new HashMap<>();
                 userData.put("username", user.getUsername());
-                userData.put("nombreCompleto", user.getFirstname());
 
-                // Descubrimos el rol por su tipo de clase real
                 if (user instanceof Patient) {
                     userData.put("role", "PATIENT");
                 } else if (user instanceof Doctor) {
