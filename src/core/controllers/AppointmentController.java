@@ -40,7 +40,7 @@ public class AppointmentController {
 
     }
 
-    public Response loadDoctors() {
+    public static Response loadDoctors() {
         DataRepository storage = DataRepository.getInstance();
 
         // Creamos el mapa que viajará a la vista: <String ID, String Nombre>
@@ -155,7 +155,7 @@ public class AppointmentController {
             int consecutivo = storage.getNextAppointmentConsecutive(patientId);
             String appointmentId = String.format("A-%d-%04d", patientId, consecutivo);
 
-            Appointment appointment = new Appointment(appointmentDate, p, d, typeSpecialty, datetime, reason, booleanType);
+            Appointment appointment = new Appointment(appointmentId, p, d, typeSpecialty, datetime, reason, booleanType);
             p.addAppointment(appointment);
             return new Response("Appointment created succesfully", Status.CREATED);
 
@@ -166,13 +166,14 @@ public class AppointmentController {
     }
 
     //
-    public static Response createAppointmentByDoctor(String username, String doctor, String appointmentDate, String AppointmentTime, String reason, String type) {
+    public static Response createAppointmentByDoctor(String username, String doctorId, String appointmentDate, String AppointmentTime, String reason, String type) {
 
         try {
             LocalDate date;
             LocalTime time;
             LocalDateTime datetime;
             Boolean booleanType;
+            long longDoctorId;
 
             //Revisamos fecha valida
             try {
@@ -180,6 +181,13 @@ public class AppointmentController {
 
             } catch (DateTimeParseException e) {
                 return new Response("Not a valid date", Status.BAD_REQUEST);
+            }
+
+            try {
+                longDoctorId = Long.parseLong(doctorId.trim());
+
+            } catch (NumberFormatException e) {
+                return new Response("Not a valid ID", Status.BAD_REQUEST);
             }
 
             try {
@@ -193,6 +201,8 @@ public class AppointmentController {
                 return new Response("Not a valid time", Status.BAD_REQUEST);
 
             }
+
+            datetime = LocalDateTime.of(date, time);
 
             if (reason.trim().equals("")) {
                 return new Response("Reason can not be empty", Status.BAD_REQUEST);
@@ -215,11 +225,13 @@ public class AppointmentController {
             //Traemos la instancia del storage, buscamos al paciente correspondiente
             DataRepository storage = DataRepository.getInstance();
             Patient p = storage.getPatientByUsername(username);
+            Doctor d = storage.getDoctorById(longDoctorId);
 
             //Buscamos si existe un doctor valido
-            Doctor d = storage.findAvailableDoctorBySpecialty(typeSpecialty, datetime);
-            if (d == null) {
-                return new Response("No hay doctores disponibles con esa especialidad en esa fecha", Status.BAD_REQUEST);
+            if (!storage.isDoctorAvailableById(longDoctorId, datetime)) {
+
+                return new Response("Este doctor no esta disponible en esta fecha", Status.BAD_REQUEST);
+
             }
 
             //Generamos el Id de la cita
@@ -227,7 +239,7 @@ public class AppointmentController {
             int consecutivo = storage.getNextAppointmentConsecutive(patientId);
             String appointmentId = String.format("A-%d-%04d", patientId, consecutivo);
 
-            Appointment appointment = new Appointment(appointmentDate, p, d, typeSpecialty, datetime, reason, booleanType);
+            Appointment appointment = new Appointment(appointmentDate, p, d, d.getSpecialty(), datetime, reason, booleanType);
             p.addAppointment(appointment);
             return new Response("Appointment created succesfully", Status.CREATED);
 
