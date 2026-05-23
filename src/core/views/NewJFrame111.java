@@ -4,21 +4,13 @@
  */
 package core.views;
 
-import core.model.Administrator;
-import core.model.Appointment;
-import core.model.AppointmentStatus;
-import core.model.Doctor;
-import core.model.Hospitalization;
-import core.model.HospitalizationStatus;
-import core.model.Patient;
-import core.model.prescription;
-import core.model.RoomType;
+import core.controllers.AppointmentController;
+import core.controllers.utils.Response;
 import core.model.Specialty;
 import core.model.User;
 import java.awt.Color;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -1136,26 +1128,32 @@ public class NewJFrame111 extends javax.swing.JFrame {
     private void SaveDoctorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveDoctorButtonActionPerformed
         String firstname = FirstNameDoctorTextField.getText();
         String lastname = LastnameDoctorTextField.getText();
-        String spec = SpecialtyDoctorComboBox.getItemAt(SpecialtyDoctorComboBox.getSelectedIndex());
-        String licenseNumber = LicenseNumberDoctorTextField.getText();
-        String assignedOffice = AssignedOfficeDoctorTextField.getText();
+        String inSpecialty = SpecialtyDoctorComboBox.getItemAt(SpecialtyDoctorComboBox.getSelectedIndex());
+        String license = LicenseNumberDoctorTextField.getText();
+        String office = AssignedOfficeDoctorTextField.getText();
         String username = UserDoctorTextField.getText();
         String password = PasswordDoctorTextField.getText();
         String comPassword = PasswordConfirmationDoctorTextField.getText();
-        Specialty specialty = Specialty.valueOf(spec.replaceAll(" &", "").replaceAll(" ", "_"));
-        if (password.equals(comPassword)) {
-            for (User doc : this.users) {
-                if (doctor.getId() == doc.getId()) {
-                    doctor.setFirstname(firstname);
-                    doctor.setLastname(lastname);
-                    doctor.setPassword(password);
-                    doctor.setUsername(username);
-                    doctor.setAssignedOffice(assignedOffice);
-                    doctor.setLicenceNumber(licenseNumber);
-                    doctor.setSpecialty(specialty);
 
-                }
-            }
+        Response response = AppointmentController.updateDoctor(this.currentUsername, username, firstname, lastname, password, comPassword, inSpecialty, license, office);
+
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Atención", JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Perfil Actualizado con Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+            this.currentUsername = username;
+            
+            FirstNameDoctorTextField.setText("");
+            LastnameDoctorTextField.setText("");
+            SpecialtyDoctorComboBox.setSelectedIndex(0);
+            LicenseNumberDoctorTextField.setText("");
+            AssignedOfficeDoctorTextField.setText("");
+            UserDoctorTextField.setText("");
+            PasswordDoctorTextField.setText("");
+            PasswordConfirmationDoctorTextField.setText("");
         }
     }//GEN-LAST:event_SaveDoctorButtonActionPerformed
 
