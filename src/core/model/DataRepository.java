@@ -41,7 +41,7 @@ public class DataRepository {
         System.out.println("Iniciando carga desde archivo centralizado 'users.json'...");
         try {
             JsonManager jsonManager = new JsonManager(this);
-            jsonManager.loadAllDataFromJson("users.json");
+            jsonManager.loadAllDataFromJson("json/users.json");
         } catch (Exception e) {
             System.out.println("Advertencia al inicializar la base de datos unificada: " + e.getMessage());
         }
