@@ -126,10 +126,10 @@ public class AppointmentController {
                 return new Response("Reason can not be empty", Status.BAD_REQUEST);
             }
 
-            booleanType = switch (type) {
+            booleanType = switch (type.trim()) {
                 case "Remote" ->
                     true;
-                case "In-Person" ->
+                case "In-person" ->
                     false;
 
                 default ->
@@ -225,7 +225,7 @@ public class AppointmentController {
             //Traemos la instancia del storage, buscamos al paciente correspondiente
             DataRepository storage = DataRepository.getInstance();
             Patient p = storage.getPatientByUsername(username);
-            Doctor d = storage.getDoctorById(longDoctorId);
+            Doctor d = storage.findDoctorById(longDoctorId);
 
             //Buscamos si existe un doctor valido
             if (!storage.isDoctorAvailableById(longDoctorId, datetime)) {
