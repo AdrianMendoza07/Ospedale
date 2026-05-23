@@ -129,7 +129,7 @@ public class AppointmentController {
             booleanType = switch (type.trim()) {
                 case "Remote" ->
                     true;
-                case "In-Person" ->
+                case "In-person" ->
                     false;
 
                 default ->
