@@ -40,7 +40,7 @@ public class AppointmentController {
 
     }
 
-    public Response loadDoctors() {
+    public static Response loadDoctors() {
         DataRepository storage = DataRepository.getInstance();
 
         // Creamos el mapa que viajará a la vista: <String ID, String Nombre>
