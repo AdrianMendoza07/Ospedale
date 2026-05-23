@@ -155,7 +155,7 @@ public class AppointmentController {
             int consecutivo = storage.getNextAppointmentConsecutive(patientId);
             String appointmentId = String.format("A-%d-%04d", patientId, consecutivo);
 
-            Appointment appointment = new Appointment(appointmentDate, p, d, typeSpecialty, datetime, reason, booleanType);
+            Appointment appointment = new Appointment(appointmentId, p, d, typeSpecialty, datetime, reason, booleanType);
             p.addAppointment(appointment);
             return new Response("Appointment created succesfully", Status.CREATED);
 
