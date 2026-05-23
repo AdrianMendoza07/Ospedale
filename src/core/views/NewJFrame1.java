@@ -4,22 +4,12 @@
  */
 package core.views;
 
+import core.controllers.AppointmentController;
 import core.controllers.PatientController;
 import core.controllers.utils.Response;
-import core.model.Administrator;
-import core.model.Appointment;
-import core.model.AppointmentStatus;
-import core.model.Doctor;
-import core.model.Hospitalization;
-import core.model.Patient;
-import core.model.RoomType;
-import core.model.Specialty;
-import core.model.User;
 import java.awt.Color;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -32,6 +22,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
 
     private int x, y;
     private String currentUsername;
+    private HashMap<String, String> mapaDoctoresCargados = new HashMap<>();
 
     public NewJFrame1(String username, String role) {
         initComponents();
@@ -124,7 +115,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         AppointmentReasonTextArea = new javax.swing.JTextArea();
         IDAppointmentCancelComboBox = new javax.swing.JComboBox<>();
-        jComboBox5 = new javax.swing.JComboBox<>();
+        SelectComboBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -557,8 +548,8 @@ public class NewJFrame1 extends javax.swing.JFrame {
         IDAppointmentCancelComboBox.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         IDAppointmentCancelComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select one" }));
 
-        jComboBox5.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select one" }));
+        SelectComboBox.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        SelectComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select one" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -582,7 +573,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(jLabel15)
                                         .addComponent(jLabel14)
-                                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(SelectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addGap(63, 63, 63)
                                     .addComponent(AppointmentTimeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -699,7 +690,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
                                     .addComponent(SpecialtyRadioButton)
                                     .addComponent(DoctorRadioButton))
                                 .addGap(18, 18, 18)
-                                .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(SelectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel14)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -839,44 +830,85 @@ public class NewJFrame1 extends javax.swing.JFrame {
         if (DoctorRadioButton.isSelected()) {
             DoctorRadioButton.setSelected(false);
         }
+        SelectComboBox.removeAllItems();
+        SelectComboBox.addItem("Select one");
 
-        jComboBox5.removeAllItems();
+        Response response = AppointmentController.getAllSpecialties();
 
-        jComboBox5.addItem("Select one");
-        for (Specialty spec : Specialty.values()) {
-            jComboBox5.addItem(spec.toString().replaceAll("_", " & "));
+        if (response.getStatus() == 200 && response.getData() != null) {
+            HashMap<String, Object> specialtiesMap = response.getData();
+
+            for (Object specName : specialtiesMap.values()) {
+                SelectComboBox.addItem(String.valueOf(specName));
+            }
         }
+
     }//GEN-LAST:event_SpecialtyRadioButtonActionPerformed
 
     private void DoctorRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DoctorRadioButtonActionPerformed
         if (SpecialtyRadioButton.isSelected()) {
             SpecialtyRadioButton.setSelected(false);
         }
-        jComboBox5.removeAllItems();
+        SelectComboBox.removeAllItems();
+        SelectComboBox.addItem("Select one");
 
-        jComboBox5.addItem("Select one");
-        for (User doc : this.users) {
-            if (doc instanceof Doctor) {
-                jComboBox5.addItem(doc.getFirstname() + " " + doc.getLastname());
+        mapaDoctoresCargados.clear();
+
+        Response response = AppointmentController.loadDoctors();
+
+        if (response.getStatus() == 200 && response.getData() != null) {
+            ArrayList<HashMap<String, Object>> doctorsList = (ArrayList<HashMap<String, Object>>) response.getData().get("doctorsList");
+
+            if (response.getStatus() == 200 && response.getData() != null) {
+                HashMap<String, Object> doctorsMap = response.getData();
+
+                for (Map.Entry<String, Object> entry : doctorsMap.entrySet()) {
+                    String idStr = entry.getKey();
+                    String nombreCompleto = String.valueOf(entry.getValue());
+
+                    mapaDoctoresCargados.put(idStr, nombreCompleto);
+
+                    SelectComboBox.addItem(nombreCompleto);
+                }
             }
         }
     }//GEN-LAST:event_DoctorRadioButtonActionPerformed
 
     private void CreateAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAppointmentButtonActionPerformed
         String appointDate = AppointmentDateTextField.getText();
-        LocalDate appointmentDate = LocalDate.of(Integer.parseInt(appointDate.substring(0, 4)), Integer.parseInt(appointDate.substring(5, 7)), Integer.parseInt(appointDate.substring(8)));
-        LocalTime appointmentHour = LocalTime.of(Integer.parseInt(AppointmentTimeTextField.getText().substring(0, 2)), Integer.parseInt(AppointmentTimeTextField.getText().substring(3)));
-        LocalDateTime Finally = LocalDateTime.of(appointmentDate, appointmentHour);
+        String appointmentTime = AppointmentTimeTextField.getText();
         String appointmentReason = AppointmentReasonTextArea.getText();
-        long docId = Long.parseLong(jComboBox5.getItemAt(jComboBox5.getSelectedIndex()));
-        Doctor doctor = null;
-        for (User use : this.users) {
-            if (use.getId() == docId) {
-                doctor = (Doctor) use;
+        String nombreSeleccionado = SelectComboBox.getItemAt(SelectComboBox.getSelectedIndex());
+        String appointmentType = ApointmentTypeComboBox.getItemAt(ApointmentTypeComboBox.getSelectedIndex());
+
+        Response response;
+
+        if (SpecialtyRadioButton.isSelected()) {
+            response = AppointmentController.createAppointmentBySpecialty(this.currentUsername, nombreSeleccionado, appointDate, appointmentTime, appointmentReason, appointmentType);
+        } else {
+            String idDoctorEncontrado = null;
+            for (Map.Entry<String, String> entry : mapaDoctoresCargados.entrySet()) {
+                if (entry.getValue().equals(nombreSeleccionado)) {
+                    idDoctorEncontrado = entry.getKey();
+                    break;
+                }
             }
+            response = AppointmentController.createAppointmentByDoctor(this.currentUsername, idDoctorEncontrado, appointDate, appointmentTime, appointmentReason, appointmentType);
         }
-        boolean appointmentType = (ApointmentTypeComboBox.getSelectedIndex() == 0 ? null : (ApointmentTypeComboBox.getSelectedIndex() == 2));
-        this.appointments.add(new Appointment(appointDate, patient, doctor, doctor.getSpecialty(), Finally, appointDate, appointmentType));
+
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Atención", JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Cita Agendada", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        AppointmentDateTextField.setText("");
+        AppointmentTimeTextField.setText("");
+        AppointmentReasonTextArea.setText("");
+        SelectComboBox.setSelectedIndex(0);
+
     }//GEN-LAST:event_CreateAppointmentButtonActionPerformed
 
 
@@ -936,10 +968,10 @@ public class NewJFrame1 extends javax.swing.JFrame {
     private javax.swing.JTextField PhoneInfoTextField;
     private javax.swing.JButton RefreshButton;
     private javax.swing.JButton SaveButton;
+    private javax.swing.JComboBox<String> SelectComboBox;
     private javax.swing.JRadioButton SpecialtyRadioButton;
     private javax.swing.JTextField UserModifyInfoTextField;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
