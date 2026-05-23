@@ -102,6 +102,10 @@ public class Appointment {
     public void setRecommendedTreatment(String recommendedTreatment) {
         this.recommendedTreatment = recommendedTreatment;
     }
+    
+    public void setDatetime(LocalDateTime datetime) {
+    this.datetime = datetime;
+}
 
     public String getFollowUp() {
         return followUp;
