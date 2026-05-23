@@ -5,6 +5,7 @@
 package core.model;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 /**
  *
@@ -114,7 +115,6 @@ public class DataRepository {
     }
 
     public boolean addDoctor(long longId, String username, String firstname, String lastname, String password, String licenceNumber, Specialty specialty, String assignedOffice) {
-        // Validación de unicidad
         if (findUserById(longId) != null || getUserByUsername(username) != null) {
             return false;
         }
@@ -179,6 +179,39 @@ public class DataRepository {
         return filtradas;
     }
 
+    public int getNextAppointmentConsecutive(long patientId) {
+        int contador = 0;
+
+        for (Appointment app : this.appointments) {
+            if (app.getPatient() != null && app.getPatient().getId() == patientId) {
+                contador++;
+            }
+        }
+
+        return contador;
+    }
+    public Doctor findAvailableDoctor(Specialty specialty, LocalDateTime datetime) {
+        if (specialty == null || datetime == null) return null;
+
+        for (Doctor doc : this.doctors) {
+            if (doc.getSpecialty() == specialty) {
+                boolean estaOcupado = false;
+                for (Appointment app : this.appointments) {
+                    if (app.getDoctor() != null && app.getDoctor().getId() == doc.getId()) {
+                        if (app.getDatetime().equals(datetime)) {
+                            estaOcupado = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!estaOcupado) {
+                    return doc;
+                }
+            }
+        }
+        return null; 
+    }
 
     public HashMap<String, Object> patientToMap(Patient p) {
         if (p == null) return null;
