@@ -560,7 +560,7 @@
                                               <Group type="103" groupAlignment="1" attributes="0">
                                                   <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                                                   <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="jComboBox5" alignment="1" min="-2" pref="137" max="-2" attributes="0"/>
+                                                  <Component id="SelectComboBox" alignment="1" min="-2" pref="137" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
@@ -712,7 +712,7 @@
                                               <Component id="DoctorRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="jComboBox5" min="-2" max="-2" attributes="0"/>
+                                          <Component id="SelectComboBox" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -1093,7 +1093,7 @@
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox5">
+                <Component class="javax.swing.JComboBox" name="SelectComboBox">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Yu Gothic UI" size="18" style="0"/>

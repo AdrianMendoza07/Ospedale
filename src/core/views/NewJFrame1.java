@@ -7,6 +7,7 @@ package core.views;
 import core.controllers.PatientController;
 import core.controllers.utils.Response;
 import java.awt.Color;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -111,7 +112,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         AppointmentReasonTextArea = new javax.swing.JTextArea();
         IDAppointmentCancelComboBox = new javax.swing.JComboBox<>();
-        jComboBox5 = new javax.swing.JComboBox<>();
+        SelectComboBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -544,8 +545,8 @@ public class NewJFrame1 extends javax.swing.JFrame {
         IDAppointmentCancelComboBox.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         IDAppointmentCancelComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select one" }));
 
-        jComboBox5.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select one" }));
+        SelectComboBox.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        SelectComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select one" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -569,7 +570,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(jLabel15)
                                         .addComponent(jLabel14)
-                                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(SelectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addGap(63, 63, 63)
                                     .addComponent(AppointmentTimeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -686,7 +687,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
                                     .addComponent(SpecialtyRadioButton)
                                     .addComponent(DoctorRadioButton))
                                 .addGap(18, 18, 18)
-                                .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(SelectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel14)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -826,36 +827,36 @@ public class NewJFrame1 extends javax.swing.JFrame {
         if (DoctorRadioButton.isSelected()) {
             DoctorRadioButton.setSelected(false);
         }
+        SelectComboBox.removeAllItems();
+        SelectComboBox.addItem("Select one");
 
-        jComboBox5.removeAllItems();
-
-        jComboBox5.addItem("Select one");
-        for (Specialty spec : Specialty.values()) {
-            jComboBox5.addItem(spec.toString().replaceAll("_", " & "));
+        ArrayList<String> specialties = appointmentController.getAllSpecialties();
+        for (String spec : specialties) {
+            SelectComboBox.addItem(spec);
         }
+
     }//GEN-LAST:event_SpecialtyRadioButtonActionPerformed
 
     private void DoctorRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DoctorRadioButtonActionPerformed
         if (SpecialtyRadioButton.isSelected()) {
             SpecialtyRadioButton.setSelected(false);
         }
-        jComboBox5.removeAllItems();
-
-        jComboBox5.addItem("Select one");
-        for (User doc : this.users) {
-            if (doc instanceof Doctor) {
-                jComboBox5.addItem(doc.getFirstname() + " " + doc.getLastname());
-            }
+        SelectComboBox.removeAllItems();
+        SelectComboBox.addItem("Select one");
+        
+        ArrayList<String> doctorNames = appointmentController.getAllDoctorNames();
+        for (String name : doctorNames) {
+            SelectComboBox.addItem(name);
         }
     }//GEN-LAST:event_DoctorRadioButtonActionPerformed
 
     private void CreateAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAppointmentButtonActionPerformed
         String appointDate = AppointmentDateTextField.getText();
-        LocalDate appointmentDate = LocalDate.of(Integer.parseInt(appointDate.substring(0, 4)), Integer.parseInt(appointDate.substring(5, 7)), Integer.parseInt(appointDate.substring(8)));
-        LocalTime appointmentHour = LocalTime.of(Integer.parseInt(AppointmentTimeTextField.getText().substring(0, 2)), Integer.parseInt(AppointmentTimeTextField.getText().substring(3)));
-        LocalDateTime Finally = LocalDateTime.of(appointmentDate, appointmentHour);
+        String appointmentTime = AppointmentTimeTextField.getText();
         String appointmentReason = AppointmentReasonTextArea.getText();
-        long docId = Long.parseLong(jComboBox5.getItemAt(jComboBox5.getSelectedIndex()));
+        String selectedValue = SelectComboBox.getItemAt(SelectComboBox.getSelectedIndex());
+        String appointmentType = ApointmentTypeComboBox.getItemAt(ApointmentTypeComboBox.getSelectedIndex());
+
         Doctor doctor = null;
         for (User use : this.users) {
             if (use.getId() == docId) {
@@ -923,10 +924,10 @@ public class NewJFrame1 extends javax.swing.JFrame {
     private javax.swing.JTextField PhoneInfoTextField;
     private javax.swing.JButton RefreshButton;
     private javax.swing.JButton SaveButton;
+    private javax.swing.JComboBox<String> SelectComboBox;
     private javax.swing.JRadioButton SpecialtyRadioButton;
     private javax.swing.JTextField UserModifyInfoTextField;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
