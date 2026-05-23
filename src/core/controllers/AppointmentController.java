@@ -51,7 +51,6 @@ import java.util.HashMap;
 public class AppointmentController {
 
     public static Response getAllSpecialties() {
-
         HashMap<String, Object> especialidadesMap = new HashMap<>();
 
         for (Specialty esp : Specialty.values()) {

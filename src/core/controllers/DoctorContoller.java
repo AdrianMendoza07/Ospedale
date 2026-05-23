@@ -95,26 +95,22 @@ public class DoctorContoller {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }
-    
-    public static Response updateDoctor(String id, String username, String firstname, String lastname, String password, String comPassword, String inSpecialty, String license, String office) {
+
+    public static Response updateDoctor(String username, String firstname, String lastname, String password, String comPassword, String inSpecialty, String license, String office) {
 
         try {
-            long longId;
             Specialty dSpecialty;
 
-            if (id.trim().equals("")) {
-                return new Response("Id must not be empty", Status.BAD_REQUEST);
-            }
             if (username.trim().equals("")) {
                 return new Response("Username must not be empty", Status.BAD_REQUEST);
             }
-            
+
             DataRepository storage = DataRepository.getInstance();
             User user = storage.getUserByUsername(username);
-            if (user == null){
-                return new Response("User not found",Status.NOT_FOUND);
+            if (user == null) {
+                return new Response("User not found", Status.NOT_FOUND);
             }
-            
+
             if (firstname.trim().equals("")) {
                 return new Response("Firstname must not be empty", Status.BAD_REQUEST);
             }
@@ -142,18 +138,7 @@ public class DoctorContoller {
             if (office.trim().equals("")) {
                 return new Response("Office number must not be empty", Status.BAD_REQUEST);
             }
-            try {
-                longId = Long.parseLong(id.trim());
-                if (longId < 0) {
-                    return new Response("Id must be positive.", Status.BAD_REQUEST);
-                }
-                if (id.length() != 12) {
-                    return new Response("Id must have 12 digits.", Status.BAD_REQUEST);
-                }
-
-            } catch (NumberFormatException e) {
-                return new Response("Id must be a number", Status.BAD_REQUEST);
-            }
+            
 
             String licenseRegex = "^L-\\d{10} MTL$";
             if (!license.trim().matches(licenseRegex)) {

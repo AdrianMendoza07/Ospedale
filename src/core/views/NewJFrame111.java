@@ -52,17 +52,17 @@ public class NewJFrame111 extends javax.swing.JFrame {
         BackDoctorViewButton = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel4 = new javax.swing.JPanel();
-        jRadioButton3 = new javax.swing.JRadioButton();
+        TotalAppointmentsRadioButton = new javax.swing.JRadioButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jButton12 = new javax.swing.JButton();
+        PendingApointmentsRadioButton = new javax.swing.JRadioButton();
+        LogoutButton = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         PatientComboBox = new javax.swing.JComboBox<>();
         jLabel38 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
-        jButton8 = new javax.swing.JButton();
+        SearchButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         FirstNameDoctorTextField = new javax.swing.JTextField();
@@ -80,7 +80,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         PasswordConfirmationDoctorTextField = new javax.swing.JTextField();
         SpecialtyDoctorComboBox = new javax.swing.JComboBox<>();
-        SaveDoctorButton = new javax.swing.JButton();
+        ModifyInfoDoctorButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -212,11 +212,11 @@ public class NewJFrame111 extends javax.swing.JFrame {
                 .addComponent(BackDoctorViewButton))
         );
 
-        jRadioButton3.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jRadioButton3.setText("Total appointments");
-        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+        TotalAppointmentsRadioButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        TotalAppointmentsRadioButton.setText("Total appointments");
+        TotalAppointmentsRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton3ActionPerformed(evt);
+                TotalAppointmentsRadioButtonActionPerformed(evt);
             }
         });
 
@@ -233,19 +233,19 @@ public class NewJFrame111 extends javax.swing.JFrame {
         ));
         jScrollPane3.setViewportView(jTable2);
 
-        jRadioButton4.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jRadioButton4.setText("Pending appointments");
-        jRadioButton4.addActionListener(new java.awt.event.ActionListener() {
+        PendingApointmentsRadioButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        PendingApointmentsRadioButton.setText("Pending appointments");
+        PendingApointmentsRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton4ActionPerformed(evt);
+                PendingApointmentsRadioButtonActionPerformed(evt);
             }
         });
 
-        jButton12.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jButton12.setText("Logout");
-        jButton12.addActionListener(new java.awt.event.ActionListener() {
+        LogoutButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        LogoutButton.setText("Logout");
+        LogoutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton12ActionPerformed(evt);
+                LogoutButtonActionPerformed(evt);
             }
         });
 
@@ -255,13 +255,13 @@ public class NewJFrame111 extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton12)
+                    .addComponent(LogoutButton)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel4Layout.createSequentialGroup()
                             .addGap(16, 16, 16)
-                            .addComponent(jRadioButton3)
+                            .addComponent(TotalAppointmentsRadioButton)
                             .addGap(18, 18, 18)
-                            .addComponent(jRadioButton4))
+                            .addComponent(PendingApointmentsRadioButton))
                         .addGroup(jPanel4Layout.createSequentialGroup()
                             .addGap(108, 108, 108)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1035, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -272,12 +272,12 @@ public class NewJFrame111 extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton3)
-                    .addComponent(jRadioButton4))
+                    .addComponent(TotalAppointmentsRadioButton)
+                    .addComponent(PendingApointmentsRadioButton))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addComponent(jButton12)
+                .addComponent(LogoutButton)
                 .addGap(23, 23, 23))
         );
 
@@ -310,11 +310,11 @@ public class NewJFrame111 extends javax.swing.JFrame {
         });
         jScrollPane4.setViewportView(jTable3);
 
-        jButton8.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jButton8.setText("Search");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        SearchButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        SearchButton.setText("Search");
+        SearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                SearchButtonActionPerformed(evt);
             }
         });
 
@@ -335,7 +335,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
                 .addContainerGap(99, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton8)
+                .addComponent(SearchButton)
                 .addGap(601, 601, 601))
         );
         jPanel5Layout.setVerticalGroup(
@@ -348,7 +348,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44)
-                .addComponent(jButton8)
+                .addComponent(SearchButton)
                 .addContainerGap(67, Short.MAX_VALUE))
         );
 
@@ -397,11 +397,11 @@ public class NewJFrame111 extends javax.swing.JFrame {
         SpecialtyDoctorComboBox.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         SpecialtyDoctorComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select one", "General Medicine", "Cardiology", "Pediatrics", "Neurology", "Traumatology & Orthopedics", "Gynecology & Obstetrics", "Dermatology", "Psychiatry", "Oncology", "Ophthalmology", "Internal Medicine" }));
 
-        SaveDoctorButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        SaveDoctorButton.setText("Save");
-        SaveDoctorButton.addActionListener(new java.awt.event.ActionListener() {
+        ModifyInfoDoctorButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        ModifyInfoDoctorButton.setText("Save");
+        ModifyInfoDoctorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SaveDoctorButtonActionPerformed(evt);
+                ModifyInfoDoctorButtonActionPerformed(evt);
             }
         });
 
@@ -446,7 +446,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
                         .addComponent(jLabel11))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(576, 576, 576)
-                        .addComponent(SaveDoctorButton))
+                        .addComponent(ModifyInfoDoctorButton))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(561, 561, 561)
                         .addComponent(PasswordConfirmationDoctorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -482,7 +482,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(PasswordConfirmationDoctorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
-                .addComponent(SaveDoctorButton)
+                .addComponent(ModifyInfoDoctorButton)
                 .addContainerGap(161, Short.MAX_VALUE))
         );
 
@@ -1112,9 +1112,9 @@ public class NewJFrame111 extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
+    private void PendingApointmentsRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PendingApointmentsRadioButtonActionPerformed
         // TODO add your handling code here:
-        jRadioButton3.setSelected(false);
+        TotalAppointmentsRadioButton.setSelected(false);
         Doctor d = (Doctor) user;
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
@@ -1123,9 +1123,9 @@ public class NewJFrame111 extends javax.swing.JFrame {
                 model.addRow(new Object[]{a.getId(), a.getDatetime().toString(), a.getPatient().getFirstname() + " " + a.getDoctor().getLastname(), a.getSpecialty().name(), a.isType() ? "In person" : "Virtual", a.getStatus().name()});
             }
         }
-    }//GEN-LAST:event_jRadioButton4ActionPerformed
+    }//GEN-LAST:event_PendingApointmentsRadioButtonActionPerformed
 
-    private void SaveDoctorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveDoctorButtonActionPerformed
+    private void ModifyInfoDoctorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyInfoDoctorButtonActionPerformed
         String firstname = FirstNameDoctorTextField.getText();
         String lastname = LastnameDoctorTextField.getText();
         String inSpecialty = SpecialtyDoctorComboBox.getItemAt(SpecialtyDoctorComboBox.getSelectedIndex());
@@ -1155,13 +1155,13 @@ public class NewJFrame111 extends javax.swing.JFrame {
             PasswordDoctorTextField.setText("");
             PasswordConfirmationDoctorTextField.setText("");
         }
-    }//GEN-LAST:event_SaveDoctorButtonActionPerformed
+    }//GEN-LAST:event_ModifyInfoDoctorButtonActionPerformed
 
-    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+    private void LogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButtonActionPerformed
         NewJFrame login = new NewJFrame();
         this.setVisible(false);
         login.setVisible(true);
-    }//GEN-LAST:event_jButton12ActionPerformed
+    }//GEN-LAST:event_LogoutButtonActionPerformed
 
     private void BackDoctorViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackDoctorViewButtonActionPerformed
         NewJFrame11 admin = new NewJFrame11(user, users, hospitalizations, appointments);
@@ -1197,7 +1197,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_GenerateHospitalizationButtonActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
         // TODO add your handling code here:
         Patient p = null;
         for (User u : this.users) {
@@ -1211,18 +1211,18 @@ public class NewJFrame111 extends javax.swing.JFrame {
         for (Appointment a : p.getAppointments()) {
             model.addRow(new Object[]{a.getId(), a.getDatetime().toString(), a.getDoctor().getFirstname() + " " + a.getDoctor().getLastname(), a.getSpecialty().name(), a.isType() ? "In-person" : "Remote", a.getStatus().name()});
         }
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_SearchButtonActionPerformed
 
-    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+    private void TotalAppointmentsRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TotalAppointmentsRadioButtonActionPerformed
         // TODO add your handling code here:
-        jRadioButton4.setSelected(false);
+        PendingApointmentsRadioButton.setSelected(false);
         Doctor d = (Doctor) user;
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
         for (Appointment a : d.getAppointments()) {
             model.addRow(new Object[]{a.getId(), a.getDatetime().toString(), a.getPatient().getFirstname() + " " + a.getDoctor().getLastname(), a.getSpecialty().name(), a.isType() ? "In-person" : "Remote", a.getStatus().name()});
         }
-    }//GEN-LAST:event_jRadioButton3ActionPerformed
+    }//GEN-LAST:event_TotalAppointmentsRadioButtonActionPerformed
 
     private void AcceptAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AcceptAppointmentButtonActionPerformed
         String idAppointment = AppointmentIDComboBox.getItemAt(AppointmentIDComboBox.getSelectedIndex());
@@ -1312,25 +1312,27 @@ public class NewJFrame111 extends javax.swing.JFrame {
     private javax.swing.JTextArea IndicationTextArea;
     private javax.swing.JTextField LastnameDoctorTextField;
     private javax.swing.JTextField LicenseNumberDoctorTextField;
+    private javax.swing.JButton LogoutButton;
     private javax.swing.JTextField MedicationNamePescribeMedicationTextField;
+    private javax.swing.JButton ModifyInfoDoctorButton;
     private javax.swing.JTextField NewTimeAppointmentTextField;
     private javax.swing.JTextArea ObservationsAppointmentTextArea;
     private javax.swing.JTextArea ObservationsHospitalizationTextArea;
     private javax.swing.JTextField PasswordConfirmationDoctorTextField;
     private javax.swing.JTextField PasswordDoctorTextField;
     private javax.swing.JComboBox<String> PatientComboBox;
+    private javax.swing.JRadioButton PendingApointmentsRadioButton;
     private javax.swing.JButton PrescribeButton;
     private javax.swing.JTextField ReasonForAppointmentTextField;
     private javax.swing.JTextArea ReasonForHospitalizationTextArea;
     private javax.swing.JTextArea RecommendedTeatmentTextArea;
     private javax.swing.JComboBox<String> RescheduleAppointmentComboBox;
-    private javax.swing.JButton SaveDoctorButton;
+    private javax.swing.JButton SearchButton;
     private javax.swing.JComboBox<String> SpecialtyDoctorComboBox;
+    private javax.swing.JRadioButton TotalAppointmentsRadioButton;
     private javax.swing.JTextField TreatmentDurationPescribeMedicationTextField;
     private javax.swing.JTextField UserDoctorTextField;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton8;
     private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JComboBox<String> jComboBox8;
     private javax.swing.JLabel jLabel1;
@@ -1372,8 +1374,6 @@ public class NewJFrame111 extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JRadioButton jRadioButton6;
     private javax.swing.JScrollPane jScrollPane1;

@@ -75,7 +75,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         PasswordConfirmationInfoTextField = new javax.swing.JTextField();
-        SaveButton = new javax.swing.JButton();
+        ModifyPatientInfoButton = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         UserModifyInfoTextField = new javax.swing.JTextField();
         GenderInfoComboBox = new javax.swing.JComboBox<>();
@@ -301,11 +301,11 @@ public class NewJFrame1 extends javax.swing.JFrame {
 
         PasswordConfirmationInfoTextField.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
 
-        SaveButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        SaveButton.setText("Save");
-        SaveButton.addActionListener(new java.awt.event.ActionListener() {
+        ModifyPatientInfoButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        ModifyPatientInfoButton.setText("Save");
+        ModifyPatientInfoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SaveButtonActionPerformed(evt);
+                ModifyPatientInfoButtonActionPerformed(evt);
             }
         });
 
@@ -359,7 +359,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(60, 60, 60)
-                        .addComponent(SaveButton))
+                        .addComponent(ModifyPatientInfoButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(39, 39, 39)
                         .addComponent(PasswordConfirmationInfoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -412,7 +412,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(PasswordConfirmationInfoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36)
-                .addComponent(SaveButton)
+                .addComponent(ModifyPatientInfoButton)
                 .addContainerGap(68, Short.MAX_VALUE))
         );
 
@@ -778,7 +778,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_CancelAppointmentButtonActionPerformed
 
-    private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed
+    private void ModifyPatientInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyPatientInfoButtonActionPerformed
         String firstname = FirstnameInfoTextField.getText();
         String lastname = LastnameInfoTextField.getText();
         String gender = GenderInfoComboBox.getItemAt(GenderInfoComboBox.getSelectedIndex());
@@ -813,7 +813,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
             PasswordConfirmationInfoTextField.setText("");
         }
 
-    }//GEN-LAST:event_SaveButtonActionPerformed
+    }//GEN-LAST:event_ModifyPatientInfoButtonActionPerformed
 
     private void LogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButtonActionPerformed
         NewJFrame login = new NewJFrame();
@@ -958,13 +958,13 @@ public class NewJFrame1 extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> IDAppointmentCancelComboBox;
     private javax.swing.JTextField LastnameInfoTextField;
     private javax.swing.JButton LogoutButton;
+    private javax.swing.JButton ModifyPatientInfoButton;
     private javax.swing.JTextArea ObservationCancelTextArea;
     private javax.swing.JTextArea ObservationsTextArea;
     private javax.swing.JTextField PasswordConfirmationInfoTextField;
     private javax.swing.JTextField PasswordInfoTextField;
     private javax.swing.JTextField PhoneInfoTextField;
     private javax.swing.JButton RefreshButton;
-    private javax.swing.JButton SaveButton;
     private javax.swing.JComboBox<String> SelectComboBox;
     private javax.swing.JRadioButton SpecialtyRadioButton;
     private javax.swing.JTextField UserModifyInfoTextField;
