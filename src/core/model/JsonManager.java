@@ -95,7 +95,6 @@ public class JsonManager {
             System.out.println("Error al cargar el archivo unificado JSON: " + e.getMessage());
         }
     }
-
     public void saveAllDataToJson(String filePath) {
         JSONObject root = new JSONObject();
         JSONArray patientsArray = new JSONArray();

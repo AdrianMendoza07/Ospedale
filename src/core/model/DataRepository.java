@@ -15,7 +15,6 @@ import java.util.HashMap;
  */
 public class DataRepository {
     private static DataRepository instance;
-
     public static DataRepository getInstance() {
         if (instance == null) {
             instance = new DataRepository();
