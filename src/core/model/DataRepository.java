@@ -78,6 +78,7 @@ public class DataRepository {
         }
         return null;
     }
+
     public Patient getPatientByUsername(String username) {
         if (username == null) return null;
         for (Patient p : patients) {
@@ -85,6 +86,7 @@ public class DataRepository {
         }
         return null;
     }
+
     public Doctor getDoctorByUsername(String username) {
         if (username == null) return null;
         for (Doctor d : doctors) {
@@ -102,6 +104,7 @@ public class DataRepository {
         this.patients.add(target);
         return true;
     }
+
     public boolean updatePatient(long longId, String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
         Patient target = findPatientById(longId);
         if (target != null) {
@@ -166,6 +169,13 @@ public class DataRepository {
         }
     }
 
+    public void loadPatient(Patient p) {
+        if (p != null) this.patients.add(p);
+    }
+
+    public void loadDoctor(Doctor d) {
+        if (d != null) this.doctors.add(d);
+    }
 
     public void addAppointment(Appointment app) {
         if (app != null) {
@@ -209,21 +219,19 @@ public class DataRepository {
     public Doctor findAvailableDoctorBySpecialty(Specialty specialty, LocalDateTime dateTime) {
         for (Doctor doc : this.doctors) {
             if (doc.getSpecialty() == specialty) {
-
                 boolean estaOcupado = false;
                 for (Appointment app : this.appointments) {
                     if (app.getDoctor() != null && app.getDoctor().getId() == doc.getId() && app.getDatetime().equals(dateTime)) {
                         estaOcupado = true;
-                        break; 
+                        break;
                     }
                 }
-
                 if (!estaOcupado) {
                     return doc; 
                 }
             }
         }
-        return null; 
+        return null;
     }
 
     public boolean isDoctorAvailableById(long doctorId, LocalDateTime dateTime) {
@@ -231,7 +239,6 @@ public class DataRepository {
         if (doc == null) {
             return false; 
         }
-
         for (Appointment app : this.appointments) {
             if (app.getDoctor() != null && app.getDoctor().getId() == doctorId) {
                 if (app.getDatetime().equals(dateTime)) {
@@ -239,7 +246,6 @@ public class DataRepository {
                 }
             }
         }
-
         return true; 
     }
 
@@ -249,7 +255,7 @@ public class DataRepository {
         map.put("id", p.getId());
         map.put("username", p.getUsername());
         map.put("firstname", p.getFirstname());
-        map.put("lastname", p.getLastname());
+        map.put("lastname", p.lastname());
         map.put("email", p.getEmail());
         map.put("birthdate", p.getBirthdate());
         map.put("gender", p.isGender() ? "Femenino" : "Masculino");
