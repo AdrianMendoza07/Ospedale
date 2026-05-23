@@ -22,6 +22,7 @@ public class JsonManager {
     public JsonManager(DataRepository repository) {
         this.repository = repository;
     }
+
     public void loadPatientsFromJson(String filePath) {
         try (FileReader reader = new FileReader(filePath)) {
             JSONArray array = new JSONArray(new JSONTokener(reader));
@@ -37,8 +38,8 @@ public class JsonManager {
                 String address = obj.getString("address");
                 LocalDate birthdate = LocalDate.parse(obj.getString("birthdate"));
                 boolean gender = obj.getBoolean("gender");
-                
-                repository.addPatient(id, username, firstname, lastname, password, email, birthdate, gender, phone, address);
+                Patient patient = new Patient(id, username, firstname, lastname, password, email, birthdate, gender, phone, address);
+                repository.loadPatient(patient);
             }
         } catch (Exception e) {
             System.out.println("Error al cargar pacientes desde JSON: " + e.getMessage());
@@ -57,9 +58,9 @@ public class JsonManager {
                 String password = obj.getString("password");
                 String licenceNumber = obj.getString("licenceNumber");
                 String assignedOffice = obj.getString("assignedOffice");
-                Specialty specialty = Specialty.valueOf(obj.getString("specialty").toUpperCase());
-                
-                repository.addDoctor(id, username, firstname, lastname, password, licenceNumber, specialty, assignedOffice);
+                Specialty specialty = Specialty.valueOf(obj.getString("specialty").toUpperCase()); 
+                Doctor doctor = new Doctor(id, username, firstname, lastname, password, licenceNumber, specialty, assignedOffice);
+                repository.loadDoctor(doctor);
             }
         } catch (Exception e) {
             System.out.println("Error al cargar doctores desde JSON: " + e.getMessage());
@@ -98,6 +99,7 @@ public class JsonManager {
             System.out.println("Error al cargar citas desde JSON: " + e.getMessage());
         }
     }
+
     public void savePatientsToJson(String filePath) {
         JSONArray array = new JSONArray();
         for (Patient p : repository.getPatients()) {
@@ -139,6 +141,26 @@ public class JsonManager {
             array.write(writer, 4, 0);
         } catch (Exception e) {
             System.out.println("Error al guardar doctores en JSON: " + e.getMessage());
+        }
+    }
+
+    public void saveAppointmentsToJson(String filePath) {
+        JSONArray array = new JSONArray();
+        for (Appointment app : repository.getAppointments()) {
+            JSONObject obj = new JSONObject();
+            obj.put("id", app.getId());
+            obj.put("patientId", app.getPatient() != null ? app.getPatient().getId() : -1);
+            obj.put("doctorId", app.getDoctor() != null ? app.getDoctor().getId() : -1);
+            obj.put("reason", app.getReason());
+            obj.put("type", app.isType());
+            obj.put("datetime", app.getDatetime().toString());
+            obj.put("status", app.getStatus().name());
+            array.put(obj);
+        }
+        try (FileWriter writer = new FileWriter(filePath)) {
+            array.write(writer, 4, 0);
+        } catch (Exception e) {
+            System.out.println("Error al guardar citas en JSON: " + e.getMessage());
         }
     }
 }
