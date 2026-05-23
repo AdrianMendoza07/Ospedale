@@ -10,6 +10,7 @@ import core.controllers.utils.Response;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -857,21 +858,18 @@ public class NewJFrame1 extends javax.swing.JFrame {
         Response response = AppointmentController.loadDoctors();
 
         if (response.getStatus() == 200 && response.getData() != null) {
-            ArrayList<HashMap<String, Object>> doctorsList = (ArrayList<HashMap<String, Object>>) response.getData().get("doctorsList");
+            HashMap<String, Object> doctorsMap = response.getData();
 
-            if (response.getStatus() == 200 && response.getData() != null) {
-                HashMap<String, Object> doctorsMap = response.getData();
+            for (Map.Entry<String, Object> entry : doctorsMap.entrySet()) {
+                String idStr = entry.getKey();
+                String nombreCompleto = String.valueOf(entry.getValue());
 
-                for (Map.Entry<String, Object> entry : doctorsMap.entrySet()) {
-                    String idStr = entry.getKey();
-                    String nombreCompleto = String.valueOf(entry.getValue());
+                mapaDoctoresCargados.put(idStr, nombreCompleto);
 
-                    mapaDoctoresCargados.put(idStr, nombreCompleto);
-
-                    SelectComboBox.addItem(nombreCompleto);
-                }
+                SelectComboBox.addItem(nombreCompleto);
             }
         }
+
     }//GEN-LAST:event_DoctorRadioButtonActionPerformed
 
     private void CreateAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAppointmentButtonActionPerformed
