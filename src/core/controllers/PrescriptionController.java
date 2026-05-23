@@ -40,7 +40,7 @@ public class PrescriptionController {
     public static Response createPrescription(String username, String appointmentId, String name, String dose, String administrationRoute, String duration, String instructions, String frecuency) {
         try {
             double dDose;
-            int intDuration, intFrecuency, intAppointmentId;
+            int intDuration, intFrecuency;
 
             if (name.trim().equals("")) {
                 return new Response("Medication name must not be empty", Status.BAD_REQUEST);
@@ -82,15 +82,8 @@ public class PrescriptionController {
                 return new Response("Not a valid number", Status.BAD_REQUEST);
             }
 
-            try {
-                intAppointmentId = Integer.parseInt(appointmentId);
-
-            } catch (NumberFormatException e) {
-                return new Response("Not a valid number", Status.BAD_REQUEST);
-            }
-
             DataRepository storage = DataRepository.getInstance();
-            Appointment ap = storage.getAppointment(intAppointmentId);
+            Appointment ap = storage.getAppointment(appointmentId);
             prescription p = new prescription(ap, name, dDose, administrationRoute, intDuration, instructions, intFrecuency);
             storage.addPrescription(p);
             return new Response("Prescription created sucessfully", Status.CREATED);
