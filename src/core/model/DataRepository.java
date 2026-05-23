@@ -255,7 +255,7 @@ public class DataRepository {
         map.put("id", p.getId());
         map.put("username", p.getUsername());
         map.put("firstname", p.getFirstname());
-        map.put("lastname", p.lastname());
+        map.put("lastname", p.getLastname());
         map.put("email", p.getEmail());
         map.put("birthdate", p.getBirthdate());
         map.put("gender", p.isGender() ? "Femenino" : "Masculino");
