@@ -27,12 +27,14 @@ public class DataRepository {
     private ArrayList<Administrator> administrators;
     private ArrayList<Appointment> appointments;
     private ArrayList<Hospitalization> hospitalizations;
+    private ArrayList<prescription> prescriptions;   
     private DataRepository() {
         this.patients = new ArrayList<>();
         this.doctors = new ArrayList<>();
         this.administrators = new ArrayList<>();
         this.appointments = new ArrayList<>();
         this.hospitalizations = new ArrayList<>();
+        this.prescriptions = new ArrayList<>();
         this.initializeBaseData();
     }
 
@@ -88,6 +90,14 @@ public class DataRepository {
         return null;
     }
 
+    public Appointment getAppointment(String id){
+        for(Appointment ap : appointments){
+            if(ap.getId().trim().equals(id)) return ap;
+        }
+        
+        return null;
+    }
+    
     public Patient getPatientByUsername(String username) {
         if (username == null) return null;
         for (Patient p : patients) {
@@ -179,6 +189,14 @@ public class DataRepository {
         if (app != null) {
             this.appointments.add(app);
         }
+    }
+    
+    public boolean addPrescription(prescription p){
+        if(p != null){
+            this.prescriptions.add(p);
+            return true;
+        }
+        return false;
     }
 
     public void addHospitalization(Hospitalization hosp) {

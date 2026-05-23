@@ -7,6 +7,7 @@ package core.controllers;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.model.Appointment;
+import core.model.AppointmentStatus;
 import core.model.DataRepository;
 import core.model.Doctor;
 import core.model.Patient;
@@ -27,7 +28,7 @@ public class AppointmentController {
         HashMap<String, Object> especialidadesMap = new HashMap<>();
 
         for (Specialty esp : Specialty.values()) {
-            String nombreEspecialidad = esp.name(); 
+            String nombreEspecialidad = esp.name();
 
             especialidadesMap.put(nombreEspecialidad, nombreEspecialidad);
         }
@@ -249,4 +250,201 @@ public class AppointmentController {
 
     }
 
+    public static Response loadTotalAppointmentsToDoctor(String username) {
+
+        DataRepository storage = DataRepository.getInstance();
+        Doctor d = storage.getDoctorByUsername(username);
+
+        HashMap<String, Object> appointmentMap = new HashMap<>();
+
+        for (Appointment ap : d.getAppointments()) {
+            String id = ap.getId();
+            LocalDateTime date = ap.getDatetime();
+            String patient = ap.getPatient().getFirstname() + " " + ap.getPatient().getLastname();
+            String specialty = "" + ap.getSpecialty();
+            String type;
+            if (ap.isType()) {
+                type = "Remote";
+            } else {
+                type = "In-person";
+            }
+            String status = "" + ap.getStatus();
+
+            String[] rowData = new String[]{
+                id, // Columna 1:  ID
+                String.valueOf(date), // Columna 2: Date
+                patient, // Columna 3: Patient name
+                specialty, // Columna 4: Specialty
+                type, // Columna 5: Type
+                status // Columna 6: Status
+            };
+
+            appointmentMap.put(id, rowData);
+
+        }
+
+        return new Response("Appointments loaded sucessfully", Status.OK, appointmentMap);
+
+    }
+
+    public static Response loadPendingAppointmentsToDoctor(String username) {
+
+        DataRepository storage = DataRepository.getInstance();
+        Doctor d = storage.getDoctorByUsername(username);
+
+        HashMap<String, Object> appointmentMap = new HashMap<>();
+
+        for (Appointment ap : d.getAppointments()) {
+            if (ap.getStatus() == AppointmentStatus.PENDING) {
+                String id = ap.getId();
+                LocalDateTime date = ap.getDatetime();
+                String patient = ap.getPatient().getFirstname() + " " + ap.getPatient().getLastname();
+                String specialty = "" + ap.getSpecialty();
+                String type;
+                if (ap.isType()) {
+                    type = "Remote";
+                } else {
+                    type = "In-person";
+                }
+                String status = "" + ap.getStatus();
+
+                String[] rowData = new String[]{
+                    id, // Columna 1:  ID
+                    String.valueOf(date), // Columna 2: Date
+                    patient, // Columna 3: Patient name
+                    specialty, // Columna 4: Specialty
+                    type, // Columna 5: Type
+                    status // Columna 6: Status
+                };
+
+                appointmentMap.put(id, rowData);
+            }
+
+        }
+
+        return new Response("Appointments loaded sucessfully", Status.OK, appointmentMap);
+
+    }
+
+    public static Response loadPatientAppointmentHistoryForDoctorView(String patientId) {
+
+        long longId;
+
+        try {
+            longId = Long.parseLong(patientId);
+        } catch (NumberFormatException e) {
+            return new Response("Not a valid Id", Status.BAD_REQUEST);
+        }
+
+        DataRepository storage = DataRepository.getInstance();
+        Patient p = storage.findPatientById(longId);
+
+        HashMap<String, Object> appointmentMap = new HashMap<>();
+
+        for (Appointment ap : p.getAppointments()) {
+            String apId = ap.getId();
+            LocalDateTime date = ap.getDatetime();
+            String doctor = ap.getDoctor().getFirstname() + "" + ap.getDoctor().getFirstname();
+            String specialty = "" + ap.getSpecialty();
+            String type;
+            if (ap.isType()) {
+                type = "Remote";
+            } else {
+                type = "In-person";
+            }
+            String status = "" + ap.getStatus();
+            String[] rowData = new String[]{
+                apId, // Columna 1:  ID
+                String.valueOf(date), // Columna 2: Date
+                doctor, // Columna 3: Doctor name
+                specialty, // Columna 4: Specialty
+                type, // Columna 5: Type
+                status // Columna 6: Status
+            };
+
+            appointmentMap.put(apId, rowData);
+
+        }
+        return new Response("Appointments loaded sucessfully", Status.OK, appointmentMap);
+    }
+    
+    public static Response loadPatientAppointmentHistoryForPatientView(String username) {
+
+        
+
+        DataRepository storage = DataRepository.getInstance();
+        Patient p = storage.getPatientByUsername(username);
+
+        HashMap<String, Object> appointmentMap = new HashMap<>();
+
+        for (Appointment ap : p.getAppointments()) {
+            String apId = ap.getId();
+            LocalDateTime date = ap.getDatetime();
+            String doctor = ap.getDoctor().getFirstname() + "" + ap.getDoctor().getFirstname();
+            String specialty = "" + ap.getSpecialty();
+            String type;
+            if (ap.isType()) {
+                type = "Remote";
+            } else {
+                type = "In-person";
+            }
+            String status = "" + ap.getStatus();
+            String[] rowData = new String[]{
+                apId, // Columna 1:  ID
+                String.valueOf(date), // Columna 2: Date
+                doctor, // Columna 3: Doctor name
+                specialty, // Columna 4: Specialty
+                type, // Columna 5: Type
+                status // Columna 6: Status
+            };
+
+            appointmentMap.put(apId, rowData);
+
+        }
+        return new Response("Appointments loaded sucessfully", Status.OK, appointmentMap);
+    }
+
+    public static Response loadPendingPatientAppointments(String username) {
+        DataRepository storage = DataRepository.getInstance();
+        Patient p = storage.getPatientByUsername(username);
+
+        HashMap<String, Object> appointmentMap = new HashMap<>();
+
+        for (Appointment ap : p.getAppointments()) {
+            if (ap.getStatus() == AppointmentStatus.PENDING) {
+                String apId = ap.getId();
+
+                appointmentMap.put(apId, apId);
+            }
+
+        }
+
+        return new Response("Appointment ids loaded sucessfully", Status.OK, appointmentMap);
+    }
+    
+    public static Response cancelAppointment(String username, String apId, String observations){
+        
+        try {
+            
+            Response r = AppointmentController.loadPendingPatientAppointments(username);
+            HashMap<String, Object> pendingAp = r.getData();
+            
+            if(!pendingAp.containsKey(apId)){
+                return new Response("Not a valid id", Status.BAD_REQUEST);
+            }
+            
+            if(observations.trim().equals("")){
+                return new Response("Observations can not be empty",Status.BAD_REQUEST);
+            }
+            
+            DataRepository storage = DataRepository.getInstance();
+            storage.getAppointment(apId).setStatus(AppointmentStatus.CANCELED);
+            
+            return new Response("Appointment cancelled sucessfully", Status.OK);
+            
+        } catch (Exception e) {
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
+        
+    }
 }
