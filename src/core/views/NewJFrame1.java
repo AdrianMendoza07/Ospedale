@@ -900,12 +900,11 @@ public class NewJFrame1 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Atención", JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Cita Agendada", JOptionPane.INFORMATION_MESSAGE);
+            AppointmentDateTextField.setText("");
+            AppointmentTimeTextField.setText("");
+            AppointmentReasonTextArea.setText("");
+            SelectComboBox.setSelectedIndex(0);
         }
-
-        AppointmentDateTextField.setText("");
-        AppointmentTimeTextField.setText("");
-        AppointmentReasonTextArea.setText("");
-        SelectComboBox.setSelectedIndex(0);
 
     }//GEN-LAST:event_CreateAppointmentButtonActionPerformed
 
