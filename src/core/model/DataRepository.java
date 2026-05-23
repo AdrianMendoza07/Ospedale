@@ -179,38 +179,51 @@ public class DataRepository {
         return filtradas;
     }
 
+
     public int getNextAppointmentConsecutive(long patientId) {
         int contador = 0;
-
         for (Appointment app : this.appointments) {
             if (app.getPatient() != null && app.getPatient().getId() == patientId) {
                 contador++;
             }
         }
-
         return contador;
     }
-    public Doctor findAvailableDoctor(Specialty specialty, LocalDateTime datetime) {
-        if (specialty == null || datetime == null) return null;
 
+    public Doctor findAvailableDoctorBySpecialty(Specialty specialty, LocalDateTime dateTime) {
         for (Doctor doc : this.doctors) {
             if (doc.getSpecialty() == specialty) {
                 boolean estaOcupado = false;
                 for (Appointment app : this.appointments) {
-                    if (app.getDoctor() != null && app.getDoctor().getId() == doc.getId()) {
-                        if (app.getDatetime().equals(datetime)) {
-                            estaOcupado = true;
-                            break;
-                        }
+                    if (app.getDoctor() != null && app.getDoctor().getId() == doc.getId() && app.getDatetime().equals(dateTime)) {
+                        estaOcupado = true;
+                        break; 
                     }
                 }
 
                 if (!estaOcupado) {
-                    return doc;
+                    return doc; 
                 }
             }
         }
         return null; 
+    }
+     
+    public boolean isDoctorAvailableById(long doctorId, LocalDateTime dateTime) {
+        Doctor doc = findDoctorById(doctorId);
+        if (doc == null) {
+            return false; 
+        }
+
+        for (Appointment app : this.appointments) {
+            if (app.getDoctor() != null && app.getDoctor().getId() == doctorId) {
+                if (app.getDatetime().equals(dateTime)) {
+                    return false; 
+                }
+            }
+        }
+
+        return true; 
     }
 
     public HashMap<String, Object> patientToMap(Patient p) {
