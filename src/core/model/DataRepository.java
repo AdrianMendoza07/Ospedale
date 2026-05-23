@@ -112,27 +112,22 @@ public class DataRepository {
         return true;
     }
 
-    public boolean updatePatient(long longId, String username, String firstname, String lastname, String password, String email, LocalDate dateBirthdate, boolean boolGender, long longPhone, String address) {
-        Patient target = findPatientById(longId);
-        if (target != null) {
-            Patient existente = getPatientByUsername(username);
-            if (existente != null && existente.getId() != longId) {
-                return false; 
-            }
-            
-            target.setUsername(username);
-            target.setFirstname(firstname);
-            target.setLastname(lastname);
-            target.setPassword(password);
-            target.setEmail(email);
-            target.setBirthdate(dateBirthdate);
-            target.setGender(boolGender);
-            target.setPhone(longPhone);
-            target.setAddress(address);
-            return true;
-        }
-        return false;
+    public boolean updatePatient(String username, String firstname, String lastname, String password, String email, LocalDate dBirthdate, boolean bGender, long lPhone, String address) {
+    Patient target = getPatientByUsername(username);
+    
+    if (target != null) {
+        target.setFirstname(firstname);
+        target.setLastname(lastname);
+        target.setPassword(password);
+        target.setEmail(email);
+        target.setBirthdate(dBirthdate);
+        target.setGender(bGender);
+        target.setPhone(lPhone);
+        target.setAddress(address);
+        return true; 
     }
+    return false; 
+}
 
     public void deletePatient(long id) {
         Patient target = findPatientById(id);
@@ -150,24 +145,20 @@ public class DataRepository {
         return true;
     }
 
-    public boolean updateDoctor(long longId, String username, String firstname, String lastname, String password, String licenceNumber, Specialty specialty, String assignedOffice) {
-        Doctor target = findDoctorById(longId);
-        if (target != null) {
-            User existente = getUserByUsername(username);
-            if (existente != null && existente.getId() != longId) {
-                return false;
-            }
-            target.setUsername(username);
-            target.setFirstname(firstname);
-            target.setLastname(lastname);
-            target.setPassword(password);
-            target.setLicenceNumber(licenceNumber);
-            target.setSpecialty(specialty);
-            target.setAssignedOffice(assignedOffice);
-            return true;
-        }
-        return false;
+    public boolean updateDoctor(String username, String firstname, String lastname, String password, Specialty specialty, String license, String office) {
+    Doctor target = getDoctorByUsername(username);
+    
+    if (target != null) {
+        target.setFirstname(firstname);
+        target.setLastname(lastname);
+        target.setPassword(password);
+        target.setSpecialty(specialty);
+        target.setLicenceNumber(license);
+        target.setAssignedOffice(office);
+        return true;
     }
+    return false; 
+}
 
     public void deleteDoctor(long id) {
         Doctor target = findDoctorById(id);

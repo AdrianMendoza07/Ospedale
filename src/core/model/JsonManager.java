@@ -21,20 +21,14 @@ public class JsonManager {
         this.repository = repository;
     }
 
-    /**
-     * Carga los usuarios desde el formato único de "users"
-     */
     public void loadAllDataFromJson(String filePath) {
         try (FileReader reader = new FileReader(filePath)) {
             JSONObject root = new JSONObject(new JSONTokener(reader));
-            
-            // 1. CARGAR USUARIOS (Tu arreglo principal)
             if (root.has("users")) {
                 JSONArray usersArray = root.getJSONArray("users");
                 for (int i = 0; i < usersArray.length(); i++) {
                     JSONObject obj = usersArray.getJSONObject(i);
-                    
-                    // Validamos el tipo para saber en qué lista del repositorio inyectarlo
+
                     String type = obj.getString("type").toLowerCase();
                     
                     long id = obj.getLong("id");
@@ -72,7 +66,6 @@ public class JsonManager {
                 }
             }
 
-            // 2. CARGAR CITAS (Solo si el JSON eventualmente las tiene)
             if (root.has("appointments")) {
                 JSONArray appointmentsArray = root.getJSONArray("appointments");
                 DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -109,14 +102,10 @@ public class JsonManager {
         }
     }
 
-    /**
-     * Guarda manteniendo tu estructura limpia de un solo arreglo "users"
-     */
     public void saveAllDataToJson(String filePath) {
         JSONObject root = new JSONObject();
         JSONArray usersArray = new JSONArray();
-        
-        // 1. Administradores
+
         for (Administrator a : repository.getAdministrators()) {
             JSONObject obj = new JSONObject();
             obj.put("type", "admin");
@@ -128,7 +117,6 @@ public class JsonManager {
             usersArray.put(obj);
         }
 
-        // 2. Pacientes
         for (Patient p : repository.getPatients()) {
             JSONObject obj = new JSONObject();
             obj.put("type", "patient");
@@ -145,7 +133,6 @@ public class JsonManager {
             usersArray.put(obj);
         }
 
-        // 3. Doctores
         for (Doctor d : repository.getDoctors()) {
             JSONObject obj = new JSONObject();
             obj.put("type", "doctor");
@@ -162,7 +149,6 @@ public class JsonManager {
         
         root.put("users", usersArray);
 
-        // 4. Citas (Solo se añade al archivo si el repositorio tiene citas registradas)
         if (!repository.getAppointments().isEmpty()) {
             JSONArray appointmentsArray = new JSONArray();
             for (Appointment app : repository.getAppointments()) {
