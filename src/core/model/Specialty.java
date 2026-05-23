@@ -20,6 +20,8 @@ public enum Specialty {
     PSYCHIATRY,
     ONCOLOGY,
     OPHTHALMOLOGY,
-    INTERNAL_MEDICINE
+    INTERNAL_MEDICINE,
+    ORTHOPEDICS,
+    GYNECOLOGY
     
 }

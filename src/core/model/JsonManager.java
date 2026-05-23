@@ -21,15 +21,20 @@ public class JsonManager {
         this.repository = repository;
     }
 
+    /**
+     * Carga los usuarios desde el formato único de "users"
+     */
     public void loadAllDataFromJson(String filePath) {
         try (FileReader reader = new FileReader(filePath)) {
             JSONObject root = new JSONObject(new JSONTokener(reader));
-
+            
+            // 1. CARGAR USUARIOS (Tu arreglo principal)
             if (root.has("users")) {
                 JSONArray usersArray = root.getJSONArray("users");
                 for (int i = 0; i < usersArray.length(); i++) {
                     JSONObject obj = usersArray.getJSONObject(i);
-
+                    
+                    // Validamos el tipo para saber en qué lista del repositorio inyectarlo
                     String type = obj.getString("type").toLowerCase();
                     
                     long id = obj.getLong("id");
@@ -67,6 +72,7 @@ public class JsonManager {
                 }
             }
 
+            // 2. CARGAR CITAS (Solo si el JSON eventualmente las tiene)
             if (root.has("appointments")) {
                 JSONArray appointmentsArray = root.getJSONArray("appointments");
                 DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -96,17 +102,21 @@ public class JsonManager {
                 }
             }
             
-            System.out.println("Carga exitosa basada en polimorfismo de 'users' completada.");
+            System.out.println("Carga de usuarios desde 'users.json' completada con éxito.");
             
         } catch (Exception e) {
             System.out.println("Error al cargar el archivo unificado JSON: " + e.getMessage());
         }
     }
 
+    /**
+     * Guarda manteniendo tu estructura limpia de un solo arreglo "users"
+     */
     public void saveAllDataToJson(String filePath) {
         JSONObject root = new JSONObject();
         JSONArray usersArray = new JSONArray();
-
+        
+        // 1. Administradores
         for (Administrator a : repository.getAdministrators()) {
             JSONObject obj = new JSONObject();
             obj.put("type", "admin");
@@ -118,6 +128,7 @@ public class JsonManager {
             usersArray.put(obj);
         }
 
+        // 2. Pacientes
         for (Patient p : repository.getPatients()) {
             JSONObject obj = new JSONObject();
             obj.put("type", "patient");
@@ -134,6 +145,7 @@ public class JsonManager {
             usersArray.put(obj);
         }
 
+        // 3. Doctores
         for (Doctor d : repository.getDoctors()) {
             JSONObject obj = new JSONObject();
             obj.put("type", "doctor");
@@ -150,23 +162,26 @@ public class JsonManager {
         
         root.put("users", usersArray);
 
-        JSONArray appointmentsArray = new JSONArray();
-        for (Appointment app : repository.getAppointments()) {
-            JSONObject obj = new JSONObject();
-            obj.put("id", app.getId());
-            obj.put("patientId", app.getPatient() != null ? app.getPatient().getId() : -1);
-            obj.put("doctorId", app.getDoctor() != null ? app.getDoctor().getId() : -1);
-            obj.put("reason", app.getReason());
-            obj.put("type", app.isType());
-            obj.put("datetime", app.getDatetime().toString());
-            obj.put("status", app.getStatus().name());
-            appointmentsArray.put(obj);
+        // 4. Citas (Solo se añade al archivo si el repositorio tiene citas registradas)
+        if (!repository.getAppointments().isEmpty()) {
+            JSONArray appointmentsArray = new JSONArray();
+            for (Appointment app : repository.getAppointments()) {
+                JSONObject obj = new JSONObject();
+                obj.put("id", app.getId());
+                obj.put("patientId", app.getPatient() != null ? app.getPatient().getId() : -1);
+                obj.put("doctorId", app.getDoctor() != null ? app.getDoctor().getId() : -1);
+                obj.put("reason", app.getReason());
+                obj.put("type", app.isType());
+                obj.put("datetime", app.getDatetime().toString());
+                obj.put("status", app.getStatus().name());
+                appointmentsArray.put(obj);
+            }
+            root.put("appointments", appointmentsArray);
         }
-        root.put("appointments", appointmentsArray);
 
         try (FileWriter writer = new FileWriter(filePath)) {
             root.write(writer, 4, 0);
-            System.out.println("¡Datos guardados correctamente en la estructura de 'users'!");
+            System.out.println("¡Usuarios actualizados correctamente en 'json/users.json'!");
         } catch (Exception e) {
             System.out.println("Error al guardar en el archivo unificado JSON: " + e.getMessage());
         }
