@@ -24,18 +24,14 @@ import java.util.HashMap;
 public class AppointmentController {
 
     public static Response getAllSpecialties() {
-        // Creamos el HashMap que exige tu clase Response <Clave, Valor>
         HashMap<String, Object> especialidadesMap = new HashMap<>();
 
-        // Recorremos los valores de tu Enum
         for (Specialty esp : Specialty.values()) {
-            String nombreEspecialidad = esp.name(); // Ejemplo: "CARDIOLOGY"
+            String nombreEspecialidad = esp.name(); 
 
-            // Guardamos la especialidad en el mapa
             especialidadesMap.put(nombreEspecialidad, nombreEspecialidad);
         }
 
-        // Retornamos el HashMap dentro de tu Response habitual
         return new Response("Specialties loaded sucessfully", Status.OK, especialidadesMap);
 
     }
@@ -90,6 +86,10 @@ public class AppointmentController {
                     Specialty.OPHTHALMOLOGY;
                 case "INTERNAL_MEDICINE" ->
                     Specialty.INTERNAL_MEDICINE;
+                case "ORTHOPEDICS" ->
+                    Specialty.ORTHOPEDICS;
+                case "GYNECOLOGY" ->
+                    Specialty.GYNECOLOGY;
 
                 default ->
                     null;

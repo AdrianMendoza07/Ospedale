@@ -4,10 +4,127 @@
  */
 package core.controllers;
 
+import core.controllers.utils.Response;
+import core.controllers.utils.Status;
+import core.model.DataRepository;
+import core.model.Doctor;
+import core.model.Hospitalization;
+import core.model.Patient;
+import core.model.RoomType;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.HashMap;
+import java.util.zip.DataFormatException;
+
 /**
  *
  * @author adria
  */
 public class HospitalizationController {
-    
+
+    public static Response loadDoctors() {
+        DataRepository storage = DataRepository.getInstance();
+
+        // Creamos el mapa que viajará a la vista: <String ID, String Nombre>
+        HashMap<String, Object> doctoresMap = new HashMap<>();
+
+        // Recorremos los doctores reales del repositorio
+        for (Doctor doc : storage.getDoctors()) {
+            String idStr = String.valueOf(doc.getId());
+            String nombreCompleto = "Dr. " + doc.getFirstname() + " " + doc.getLastname();
+
+            doctoresMap.put(idStr, nombreCompleto);
+        }
+
+        return new Response("Doctors loaded sucessfully", Status.OK, doctoresMap);
+    }
+
+    public static Response getAllRoomType() {
+        HashMap<String, Object> roomTypesMap = new HashMap<>();
+
+        for (RoomType room : RoomType.values()) {
+            String nombreTipo = room.name();
+
+            roomTypesMap.put(nombreTipo, nombreTipo);
+        }
+
+        return new Response("Specialties loaded sucessfully", Status.OK, roomTypesMap);
+
+    }
+
+    public static Response createHospitalizationByPatient(String username, String reason, String doctorId, String adminDate, String roomType, String observations) {
+
+        try {
+            long longdId;
+            LocalDate date;
+            RoomType parseRoom;
+
+            try {
+                longdId = Long.parseLong(doctorId);
+            } catch (NumberFormatException e) {
+                return new Response("Id must be a number", Status.BAD_REQUEST);
+
+            }
+
+            if (reason.trim().equals("")) {
+                return new Response("Reason field must not be empty", Status.BAD_REQUEST);
+            }
+
+            DataRepository storage = DataRepository.getInstance();
+            Patient p = storage.getPatientByUsername(username);
+            Doctor d = storage.findDoctorById(longdId);
+
+            if (d == null) {
+                return new Response("This doctor does not exist", Status.BAD_REQUEST);
+            }
+
+            if (adminDate.trim().equals("")) {
+                return new Response("Date must not be empty", Status.BAD_REQUEST);
+            }
+
+            try {
+                date = LocalDate.parse(adminDate);
+            } catch (DateTimeParseException e) {
+                return new Response("Not a valid date", Status.BAD_REQUEST);
+
+            }
+
+            parseRoom = switch (roomType.trim()) {
+                case "STANDARD" ->
+                    RoomType.STANDARD;
+                case "ICU" ->
+                    RoomType.ICU;
+                case "NICU" ->
+                    RoomType.NICU;
+                case "ISOLATION" ->
+                    RoomType.ISOLATION;
+                case "IMC" ->
+                    RoomType.IMC;
+                default ->
+                    null;
+
+            };
+
+            if (parseRoom == null) {
+                return new Response("Must choose a room type", Status.BAD_REQUEST);
+            }
+
+            if (observations.trim().equals("")) {
+                return new Response("Observations can not be empty", Status.BAD_REQUEST);
+            }
+
+            long patientId = p.getId();
+            int consecutivo = storage.getNextAppointmentConsecutive(patientId);
+            String hospitalizationId = String.format("H-%d-%04d", patientId, consecutivo);
+
+            Hospitalization h = new Hospitalization(hospitalizationId, p, d, date, reason, parseRoom, observations);
+            storage.addHospitalization(h);
+            return new Response("Hospitalization request submited", Status.CREATED);
+
+        } catch (Exception e) {
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }
