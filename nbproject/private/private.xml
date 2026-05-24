@@ -3,10 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Margy/Desktop/Ospedale/src/core/views/NewJFrame1.java</file>
-            <file>file:/C:/Users/Margy/Desktop/Ospedale/src/core/views/NewJFrame111.java</file>
-            <file>file:/C:/Users/Margy/Desktop/Ospedale/src/core/controllers/HospitalizationController.java</file>
-            <file>file:/C:/Users/Margy/Desktop/Ospedale/src/core/controllers/DoctorContoller.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/views/NewJFrame.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/controllers/PrescriptionController.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/controllers/PatientController.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/model/AppointmentStatus.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/model/DataRepository.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/controllers/AppointmentController.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/controllers/DoctorContoller.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/model/Hospitalization.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/views/NewJFrame11.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/views/NewJFrame111.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/views/NewJFrame1.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/model/Appointment.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/model/Specialty.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/controllers/HospitalizationController.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/model/prescription.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/controllers/AuthController.java</file>
+            <file>file:/C:/Users/adria/OneDrive/Documentos/Codigos/Ospedale/src/core/model/Doctor.java</file>
         </group>
     </open-files>
 </project-private>

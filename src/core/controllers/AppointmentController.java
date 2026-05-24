@@ -383,7 +383,7 @@ public class AppointmentController {
         HashMap<String, Object> appointmentMap = new HashMap<>();
 
         for (Appointment ap : p.getAppointments()) {
-            if (ap.getStatus() == AppointmentStatus.PENDING) {
+            if (ap.getStatus() == AppointmentStatus.PENDING || ap.getStatus() == AppointmentStatus.REQUESTED) {
                 String apId = ap.getId();
 
                 appointmentMap.put(apId, apId);
