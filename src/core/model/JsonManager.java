@@ -24,13 +24,15 @@ public class JsonManager {
     public void loadAllDataFromJson(String filePath) {
         try (FileReader reader = new FileReader(filePath)) {
             JSONObject root = new JSONObject(new JSONTokener(reader));
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+            // 1. CARGAR USUARIOS
             if (root.has("users")) {
                 JSONArray usersArray = root.getJSONArray("users");
                 for (int i = 0; i < usersArray.length(); i++) {
                     JSONObject obj = usersArray.getJSONObject(i);
 
                     String type = obj.getString("type").toLowerCase();
-                    
                     long id = obj.getLong("id");
                     String username = obj.getString("username");
                     String firstname = obj.getString("firstname");
@@ -66,10 +68,9 @@ public class JsonManager {
                 }
             }
 
+            // 2. CARGAR CITAS MEDICAS
             if (root.has("appointments")) {
                 JSONArray appointmentsArray = root.getJSONArray("appointments");
-                DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-                
                 for (int i = 0; i < appointmentsArray.length(); i++) {
                     JSONObject obj = appointmentsArray.getJSONObject(i);
                     String id = obj.getString("id");
@@ -78,6 +79,8 @@ public class JsonManager {
                     String reason = obj.getString("reason");
                     boolean type = obj.getBoolean("type");
                     LocalDateTime datetime = LocalDateTime.parse(obj.getString("datetime"), formatter);
+                    
+             
                     AppointmentStatus status = AppointmentStatus.valueOf(obj.getString("status").toUpperCase());
                     
                     Patient patient = repository.findPatientById(patientId);
@@ -94,8 +97,38 @@ public class JsonManager {
                     }
                 }
             }
+
+            // 3. CARGAR HOSPITALIZACIONES
+            if (root.has("hospitalizations")) {
+                JSONArray hospitalizationsArray = root.getJSONArray("hospitalizations");
+                for (int i = 0; i < hospitalizationsArray.length(); i++) {
+                    JSONObject obj = hospitalizationsArray.getJSONObject(i);
+                    
+                    String id = obj.getString("id");
+                    long patientId = obj.getLong("patientId");
+                    long doctorId = obj.getLong("doctorId");
+                    LocalDate startDate = LocalDate.parse(obj.getString("startDate"));
+                    String roomNumber = obj.getString("roomNumber");
+                    RoomType roomType = RoomType.valueOf(obj.getString("roomType").toUpperCase());
+                    String reason = obj.getString("reason");
+
+                    Patient patient = repository.findPatientById(patientId);
+                    Doctor doctor = repository.findDoctorById(doctorId);
+                    
+                    if (patient != null && doctor != null) {
+                        Hospitalization hosp;
+                        if (obj.has("status")) {
+                            HospitalizationStatus status = HospitalizationStatus.valueOf(obj.getString("status").toUpperCase());
+                            hosp = new Hospitalization(id, patient, doctor, startDate, roomNumber, roomType, reason, status);
+                        } else {
+                            hosp = new Hospitalization(id, patient, doctor, startDate, roomNumber, roomType, reason);
+                        }
+                        repository.addHospitalization(hosp);
+                    }
+                }
+            }
             
-            System.out.println("Carga de usuarios desde 'users.json' completada con éxito.");
+            System.out.println("Carga de datos unificada desde 'users.json' completada con éxito.");
             
         } catch (Exception e) {
             System.out.println("Error al cargar el archivo unificado JSON: " + e.getMessage());
@@ -106,6 +139,7 @@ public class JsonManager {
         JSONObject root = new JSONObject();
         JSONArray usersArray = new JSONArray();
 
+        // 1. SALVAR ADMINISTRADORES
         for (Administrator a : repository.getAdministrators()) {
             JSONObject obj = new JSONObject();
             obj.put("type", "admin");
@@ -117,6 +151,7 @@ public class JsonManager {
             usersArray.put(obj);
         }
 
+        // 2. SALVAR PACIENTES
         for (Patient p : repository.getPatients()) {
             JSONObject obj = new JSONObject();
             obj.put("type", "patient");
@@ -133,6 +168,7 @@ public class JsonManager {
             usersArray.put(obj);
         }
 
+        // 3. SALVAR DOCTORES
         for (Doctor d : repository.getDoctors()) {
             JSONObject obj = new JSONObject();
             obj.put("type", "doctor");
@@ -146,28 +182,47 @@ public class JsonManager {
             obj.put("specialty", d.getSpecialty().name());
             usersArray.put(obj);
         }
-        
         root.put("users", usersArray);
-
-        if (!repository.getAppointments().isEmpty()) {
-            JSONArray appointmentsArray = new JSONArray();
-            for (Appointment app : repository.getAppointments()) {
-                JSONObject obj = new JSONObject();
-                obj.put("id", app.getId());
-                obj.put("patientId", app.getPatient() != null ? app.getPatient().getId() : -1);
-                obj.put("doctorId", app.getDoctor() != null ? app.getDoctor().getId() : -1);
-                obj.put("reason", app.getReason());
-                obj.put("type", app.isType());
-                obj.put("datetime", app.getDatetime().toString());
-                obj.put("status", app.getStatus().name());
-                appointmentsArray.put(obj);
-            }
-            root.put("appointments", appointmentsArray);
+        
+        // 4. SALVAR CITAS MEDICAS
+        JSONArray appointmentsArray = new JSONArray();
+        for (Appointment app : repository.getAppointments()) {
+            JSONObject obj = new JSONObject();
+            obj.put("id", app.getId());
+            obj.put("patientId", app.getPatient() != null ? app.getPatient().getId() : -1);
+            obj.put("doctorId", app.getDoctor() != null ? app.getDoctor().getId() : -1);
+            obj.put("reason", app.getReason());
+            obj.put("type", app.isType());
+            obj.put("datetime", app.getDatetime().toString());
+            obj.put("status", app.getStatus().name());
+            appointmentsArray.put(obj);
         }
+        root.put("appointments", appointmentsArray);
+
+        // 5. SALVAR HOSPITALIZACIONES 
+        JSONArray hospitalizationsArray = new JSONArray();
+        for (Hospitalization hosp : repository.getHospitalizations()) {
+            JSONObject obj = new JSONObject();
+            obj.put("id", hosp.getId());
+            obj.put("patientId", hosp.getPatient() != null ? hosp.getPatient().getId() : -1);
+            obj.put("doctorId", hosp.getDoctor() != null ? hosp.getDoctor().getId() : -1);
+            obj.put("startDate", hosp.getStartDate().toString());
+
+            obj.put("roomNumber", hosp.getRoomNumber());
+            obj.put("roomType", hosp.getRoomType().name());
+            obj.put("reason", hosp.getReason()); 
+
+            if (hosp.getStatus() != null) {
+                obj.put("status", hosp.getStatus().name());
+            }
+            
+            hospitalizationsArray.put(obj);
+        }
+        root.put("hospitalizations", hospitalizationsArray);
 
         try (FileWriter writer = new FileWriter(filePath)) {
             root.write(writer, 4, 0);
-            System.out.println("¡Usuarios actualizados correctamente en 'json/users.json'!");
+            System.out.println("¡Datos actualizados correctamente en '" + filePath + "'!");
         } catch (Exception e) {
             System.out.println("Error al guardar en el archivo unificado JSON: " + e.getMessage());
         }
