@@ -85,19 +85,17 @@ public class HospitalizationController {
         DataRepository storage = DataRepository.getInstance();
         ArrayList<Patient> ids = storage.getPatients();
         HashMap<String, Object> patientIdMap = new HashMap<>();
-        
-        for(Patient p : ids){
-            String id = ""+p.getId();
+
+        for (Patient p : ids) {
+            String id = "" + p.getId();
             patientIdMap.put(id, id);
         }
-        
-        
 
         return new Response("Hospitalizations loaded sucessfully", Status.OK, patientIdMap);
 
     }
 
-    public static Response createHospitalizationByDoctor(String username, String patientId, String incomingId, String reason, String hospDate, String hospDuration, String observations) {
+    public static Response createHospitalizationByDoctor(String username, String patientId, String reason, String hospDate, String hospDuration, String observations) {
 
         try {
             long longId;
@@ -143,10 +141,10 @@ public class HospitalizationController {
 
             Hospitalization h = new Hospitalization(hospitalizationId, p, d, date, reason, RoomType.STANDARD, observations, HospitalizationStatus.ONGOING);
             storage.addHospitalization(h);
-            
+
             JsonManager jsonManager = new JsonManager(storage);
             jsonManager.saveAllDataToJson("json/users.json");
-            
+
             return new Response("Hospitalization submited", Status.CREATED);
 
         } catch (Exception e) {
@@ -154,7 +152,57 @@ public class HospitalizationController {
         }
     }
 
-    public static Response createHospitalizationByPatient(String username, String reason, String doctorId, String adminDate, String roomType, String observations) {
+    public static Response cancelHospitalizationByDoctor(String username, String hospId) {
+
+        try {
+            if (username == null || username.trim().isEmpty()) {
+                return new Response("Doctor session username is invalid.", Status.BAD_REQUEST);
+            }
+            if (hospId == null || hospId.trim().isEmpty() || hospId.equals("Select one")) {
+                return new Response("You must select a valid hospitalization ID to cancel.", Status.BAD_REQUEST);
+            }
+
+            DataRepository storage = DataRepository.getInstance();
+            Doctor d = storage.getDoctorByUsername(username.trim());
+
+            if (d == null) {
+                return new Response("Doctor not found in the system.", Status.NOT_FOUND);
+            }
+
+            Hospitalization targetHosp = null;
+            for (Hospitalization h : d.getHospitalizations()) {
+                if (h.getId().equals(hospId.trim())) {
+                    targetHosp = h;
+                    break; 
+                }
+            }
+
+            if (targetHosp == null) {
+                return new Response("Hospitalization record not found for this doctor.", Status.NOT_FOUND);
+            }
+
+            if (targetHosp.getStatus() == HospitalizationStatus.CANCELED) {
+                return new Response("This hospitalization is already canceled.", Status.BAD_REQUEST);
+            }
+
+            if (targetHosp.getStatus() != HospitalizationStatus.REQUESTED) {
+                return new Response("Cannot cancel a hospitalization that is already " + targetHosp.getStatus() + ".", Status.BAD_REQUEST);
+            }
+
+            targetHosp.setStatus(HospitalizationStatus.CANCELED);
+
+            JsonManager jsonManager = new JsonManager(storage);
+            jsonManager.saveAllDataToJson("json/users.json");
+
+            return new Response("Hospitalization cancelled successfully", Status.OK);
+
+        } catch (Exception e) {
+            return new Response("Unexpected error" + e.getMessage(), Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+public static Response createHospitalizationByPatient(String username, String reason, String doctorId, String adminDate, String roomType, String observations) {
 
         try {
             long longdId;
@@ -221,10 +269,10 @@ public class HospitalizationController {
 
             Hospitalization h = new Hospitalization(hospitalizationId, p, d, date, reason, parseRoom, observations);
             storage.addHospitalization(h);
-            
+
             JsonManager jsonManager = new JsonManager(storage);
             jsonManager.saveAllDataToJson("json/users.json");
-            
+
             return new Response("Hospitalization request submited", Status.CREATED);
 
         } catch (Exception e) {

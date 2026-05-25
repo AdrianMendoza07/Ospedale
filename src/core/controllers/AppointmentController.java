@@ -299,6 +299,47 @@ public class AppointmentController {
         return new Response("Appointments loaded sucessfully", Status.OK, appointmentMap);
 
     }
+    
+    
+    public static Response loadRequestedAppointmentIdsToDoctor(String username){
+    DataRepository storage = DataRepository.getInstance();
+        Doctor d = storage.getDoctorByUsername(username);
+
+        HashMap<String, Object> appointmentMap = new HashMap<>();
+
+        for (Appointment ap : d.getAppointments()) {
+            if (ap.getStatus() == AppointmentStatus.REQUESTED) {
+                String id = ap.getId();
+                
+
+                appointmentMap.put(id, id);
+            }
+
+        }
+
+        return new Response("Appointment ids loaded sucessfully", Status.OK, appointmentMap);
+    }
+    
+    public static Response loadPendingAppointmentIdsToDoctor(String username){
+    DataRepository storage = DataRepository.getInstance();
+        Doctor d = storage.getDoctorByUsername(username);
+
+        HashMap<String, Object> appointmentMap = new HashMap<>();
+
+        for (Appointment ap : d.getAppointments()) {
+            if (ap.getStatus() == AppointmentStatus.PENDING) {
+                String id = ap.getId();
+                
+
+                appointmentMap.put(id, id);
+            }
+
+        }
+
+        return new Response("Appointment ids loaded sucessfully", Status.OK, appointmentMap);
+    }
+    
+    
 
     public static Response loadPatientAppointmentHistoryForDoctorView(String patientId) {
 
@@ -429,7 +470,7 @@ public class AppointmentController {
         }
     }
 
-    public static Response rescheduleAppointment(String appointmentId, String newDateStr, String newTimeStr, String newReason) {
+    public static Response rescheduleAppointment(String appointmentId, String newDateStr, String newReason) {
         try {
             if (appointmentId == null || appointmentId.trim().isEmpty() || appointmentId.equals("Select one")) {
                 return new Response("Debe seleccionar una cita válida.", Status.BAD_REQUEST);
@@ -446,17 +487,6 @@ public class AppointmentController {
                 return new Response("La nueva fecha no tiene un formato válido (AAAA-MM-DD).", Status.BAD_REQUEST);
             }
 
-            try {
-                time = LocalTime.parse(newTimeStr.trim());
-                if (time.getMinute() % 15 != 0) {
-                    return new Response("Las citas deben agendarse en cuartos de hora (00, 15, 30, 45).", Status.BAD_REQUEST);
-                }
-            } catch (Exception e) {
-                return new Response("La nueva hora no tiene un formato válido (HH:MM).", Status.BAD_REQUEST);
-            }
-
-            LocalDateTime newDateTime = LocalDateTime.of(date, time);
-
             DataRepository storage = DataRepository.getInstance();
             Appointment target = null;
             for (Appointment app : storage.getAppointments()) {
@@ -470,6 +500,9 @@ public class AppointmentController {
                 return new Response("La cita especificada no existe.", Status.NOT_FOUND);
             }
 
+            time = target.getDatetime().toLocalTime();
+            LocalDateTime newDateTime = LocalDateTime.of(date, time);
+
             long doctorId = target.getDoctor().getId();
             for (Appointment app : storage.getAppointments()) {
                 if (!app.getId().equals(target.getId()) && app.getDoctor() != null && app.getDoctor().getId() == doctorId) {
@@ -480,7 +513,7 @@ public class AppointmentController {
             }
 
             target.setDatetime(newDateTime);
-            target.setReason(newReason.trim());
+            target.setReason(target.getReason() + "REASON FOR REESCHEDULE: "+newReason.trim());
             target.setStatus(AppointmentStatus.REQUESTED);
 
             JsonManager jsonManager = new JsonManager(storage);
