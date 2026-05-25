@@ -4,6 +4,7 @@
  */
 package core.views;
 
+import core.controllers.AdministratorController;
 import core.controllers.AppointmentController;
 import core.controllers.DoctorContoller;
 import core.controllers.HospitalizationController;
@@ -24,6 +25,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
     private int x, y;
     private String currentUsername;
     private HashMap<String, String> mapaDoctoresCargados = new HashMap<>();
+    private HashMap<String, String> mapaPacientesCargados = new HashMap<>();
 
     public NewJFrame11(String username) {
         initComponents();
@@ -39,14 +41,12 @@ public class NewJFrame11 extends javax.swing.JFrame {
         DoctorComboBox.addItem("Select one");
         mapaDoctoresCargados.clear();
 
-        Response response = AppointmentController.loadDoctors();
+        Response response = AdministratorController.loadAllDoctors();
         if (response != null && response.getStatus() == 200 && response.getData() != null) {
             HashMap<String, Object> doctoresMap = (HashMap<String, Object>) response.getData();
-
             for (Map.Entry<String, Object> entry : doctoresMap.entrySet()) {
                 String idStr = entry.getKey();
                 Object nombreCompleto = entry.getValue();
-
                 mapaDoctoresCargados.put(idStr, (String) nombreCompleto);
                 DoctorComboBox.addItem((String) nombreCompleto);
             }
@@ -56,15 +56,19 @@ public class NewJFrame11 extends javax.swing.JFrame {
     private void llenarComboBoxPacientes() {
         PatientComboBox.removeAllItems();
         PatientComboBox.addItem("Select one");
-        Response response = HospitalizationController.loadPatientIdForDoctor();
+        mapaPacientesCargados.clear();
+
+        Response response = AdministratorController.loadAllPatient();
 
         if (response != null && response.getStatus() == 200 && response.getData() != null) {
             HashMap<String, Object> patientIdMap = (HashMap<String, Object>) response.getData();
 
-            for (Object idObj : patientIdMap.values()) {
-                String idPaciente = (String) idObj;
+            for (Map.Entry<String, Object> entry : patientIdMap.entrySet()) {
+                String idStr = entry.getKey();
+                Object nombreCompleto = entry.getValue();
 
-                PatientComboBox.addItem(idPaciente);
+                mapaPacientesCargados.put(idStr, (String) nombreCompleto);
+                PatientComboBox.addItem((String) nombreCompleto);
             }
         }
     }
@@ -485,19 +489,29 @@ public class NewJFrame11 extends javax.swing.JFrame {
 
     private void DoctorViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DoctorViewButtonActionPerformed
         String doctorNombreSeleccionado = DoctorComboBox.getItemAt(DoctorComboBox.getSelectedIndex());
-        String doctorUsernameEncontrado = null;
         String idDoctorEncontrado = null;
+
         for (Map.Entry<String, String> entry : mapaDoctoresCargados.entrySet()) {
             if (entry.getValue().equals(doctorNombreSeleccionado)) {
-                doctorUsernameEncontrado = entry.getKey();
+                idDoctorEncontrado = entry.getKey();
                 break;
             }
         }
-
-        if (doctorUsernameEncontrado != null) {
-            NewJFrame111 doctor = new NewJFrame111(doctorUsernameEncontrado, "ADMIN");
-            this.setVisible(false);
-            doctor.setVisible(true);
+        Response response = AdministratorController.returnDoctorUsernameToChangeView(idDoctorEncontrado);
+        if (response.getStatus() >= 500) {
+            javax.swing.JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), javax.swing.JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            javax.swing.JOptionPane.showMessageDialog(null, response.getMessage(), "Atención " + response.getStatus(), javax.swing.JOptionPane.WARNING_MESSAGE);
+        } else {
+            if (response.getData() != null) {
+                HashMap<String, Object> usernameMap = (HashMap<String, Object>) response.getData();
+                Object usernameObj = usernameMap.get(idDoctorEncontrado);
+                String doctorUsername = (String) usernameObj;
+                NewJFrame111 pantallaDoctor = new NewJFrame111(doctorUsername, "ADMIN");
+                this.setVisible(false);
+                pantallaDoctor.setVisible(true);
+                this.dispose();
+            }
         }
     }//GEN-LAST:event_DoctorViewButtonActionPerformed
 
@@ -509,13 +523,32 @@ public class NewJFrame11 extends javax.swing.JFrame {
     }//GEN-LAST:event_LogoutButtonActionPerformed
 
     private void PatientViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PatientViewButtonActionPerformed
-        String patientUsernameSeleccionado = PatientComboBox.getItemAt(PatientComboBox.getSelectedIndex());
-        if (patientUsernameSeleccionado != null) {
- 
-            NewJFrame1 pantallaPaciente = new NewJFrame1(patientUsernameSeleccionado, "ADMIN");
+        String pacienteNombreSeleccionado = PatientComboBox.getItemAt(PatientComboBox.getSelectedIndex());
+        String idPacienteEncontrado = null;
+        for (Map.Entry<String, String> entry : mapaPacientesCargados.entrySet()) {
+            if (entry.getValue().equals(pacienteNombreSeleccionado)) {
+                idPacienteEncontrado = entry.getKey();
+                break;
+            }
+        }
+        Response response = AdministratorController.returnPatientUsernameToChangeView(idPacienteEncontrado);
+        if (response.getStatus() >= 500) {
+            javax.swing.JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), javax.swing.JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            javax.swing.JOptionPane.showMessageDialog(null, response.getMessage(), "Atención " + response.getStatus(), javax.swing.JOptionPane.WARNING_MESSAGE);
+        } else {
 
-            this.setVisible(false);
-            pantallaPaciente.setVisible(true);
+            if (response.getData() != null) {
+                HashMap<String, Object> usernameMap = (HashMap<String, Object>) response.getData();
+
+                Object usernameObj = usernameMap.get(idPacienteEncontrado);
+                String patientUsername = (String) usernameObj;
+
+                NewJFrame1 pantallaPaciente = new NewJFrame1(patientUsername, "ADMIN");
+                this.setVisible(false);
+                pantallaPaciente.setVisible(true);
+                this.dispose();
+            }
         }
     }//GEN-LAST:event_PatientViewButtonActionPerformed
 
