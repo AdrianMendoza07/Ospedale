@@ -86,6 +86,12 @@ public class NewJFrame111 extends javax.swing.JFrame {
         AppointmentIDComboBox.removeAllItems();
         AppointmentIDComboBox.addItem("Select one");
 
+        AppointmentComboBox.removeAllItems();
+        AppointmentComboBox.addItem("Select one");
+        
+        AppointmentIDPescribeMedicationComboBox.removeAllItems();
+        AppointmentIDPescribeMedicationComboBox.addItem("Select one");
+
         Response response = AppointmentController.loadRequestedAppointmentIdsToDoctor(this.currentUsername);
 
         if (response != null && response.getStatus() == 200 && response.getData() != null) {
@@ -96,6 +102,8 @@ public class NewJFrame111 extends javax.swing.JFrame {
                 String idCita = (String) idObj;
 
                 AppointmentIDComboBox.addItem(idCita);
+                AppointmentComboBox.addItem(idCita);
+                AppointmentIDPescribeMedicationComboBox.addItem(idCita);
             }
         }
     }
@@ -112,6 +120,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
 
             for (Object idObj : appointmentMap.values()) {
                 RescheduleAppointmentComboBox.addItem((String) idObj);
+
             }
         }
     }
@@ -1285,13 +1294,13 @@ public class NewJFrame111 extends javax.swing.JFrame {
         Response response = HospitalizationController.createHospitalizationByDoctor(this.currentUsername, patientId, reason, hospDate, hospDuration, observations);
 
         if (response.getStatus() >= 500) {
-            
+
             javax.swing.JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), javax.swing.JOptionPane.ERROR_MESSAGE);
         } else if (response.getStatus() >= 400) {
-            
+
             javax.swing.JOptionPane.showMessageDialog(null, response.getMessage(), "Atención " + response.getStatus(), javax.swing.JOptionPane.WARNING_MESSAGE);
         } else {
-            
+
             javax.swing.JOptionPane.showMessageDialog(null, response.getMessage(), "Información Actualizada", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
             ReasonForHospitalizationTextArea.setText("");
@@ -1359,6 +1368,9 @@ public class NewJFrame111 extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(null, response.getMessage(), "Información Actualizada", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
             AppointmentIDComboBox.setSelectedIndex(0);
+            llenarComboBoxCitasSolicitadas();
+
+            llenarComboBoxCitasReprogramar();
         }
 
     }//GEN-LAST:event_AcceptAppointmentButtonActionPerformed
