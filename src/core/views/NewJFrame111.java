@@ -56,7 +56,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
             for (Object idObj : patientIdMap.values()) {
                 String idPaciente = (String) idObj;
 
-                PatientComboBox.addItem(idPaciente);
+                PatientIdComboBox.addItem(idPaciente);
             }
         }
     }
@@ -1309,6 +1309,8 @@ public class NewJFrame111 extends javax.swing.JFrame {
             EstimatedDurationTextField.setText("");
             PatientIdComboBox.setSelectedIndex(0);
             PattientRadioButton.setSelected(false);
+            
+            llenarComboBoxPacientes();
         }
 
 
