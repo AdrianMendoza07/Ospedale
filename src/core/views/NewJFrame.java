@@ -46,7 +46,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         PasswordLoginTextField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        EnterButton = new javax.swing.JButton();
+        InicioSeccionButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         FirstNameTextField = new javax.swing.JTextField();
@@ -66,7 +66,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         PasswordConfirmationTextField = new javax.swing.JTextField();
         GenderComboBox = new javax.swing.JComboBox<>();
-        SaveButton = new javax.swing.JButton();
+        CreatePatientButton = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         AddressTextField = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
@@ -131,11 +131,11 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jLabel3.setText("PASSWORD");
 
-        EnterButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        EnterButton.setText("ENTER");
-        EnterButton.addActionListener(new java.awt.event.ActionListener() {
+        InicioSeccionButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        InicioSeccionButton.setText("ENTER");
+        InicioSeccionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EnterButtonActionPerformed(evt);
+                InicioSeccionButtonActionPerformed(evt);
             }
         });
 
@@ -162,7 +162,7 @@ public class NewJFrame extends javax.swing.JFrame {
                                 .addComponent(UsernameLoginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(panelRound3Layout.createSequentialGroup()
                         .addGap(471, 471, 471)
-                        .addComponent(EnterButton)))
+                        .addComponent(InicioSeccionButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelRound3Layout.setVerticalGroup(
@@ -179,7 +179,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(PasswordLoginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
-                .addComponent(EnterButton)
+                .addComponent(InicioSeccionButton)
                 .addContainerGap(137, Short.MAX_VALUE))
         );
 
@@ -236,11 +236,11 @@ public class NewJFrame extends javax.swing.JFrame {
         GenderComboBox.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         GenderComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select one", "Female", "Male" }));
 
-        SaveButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        SaveButton.setText("Save");
-        SaveButton.addActionListener(new java.awt.event.ActionListener() {
+        CreatePatientButton.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        CreatePatientButton.setText("Save");
+        CreatePatientButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SaveButtonActionPerformed(evt);
+                CreatePatientButtonActionPerformed(evt);
             }
         });
 
@@ -276,7 +276,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(PasswordConfirmationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(456, 456, 456)
-                        .addComponent(SaveButton))
+                        .addComponent(CreatePatientButton))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(396, 396, 396)
                         .addComponent(jLabel12))
@@ -357,7 +357,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(PasswordConfirmationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37)
-                .addComponent(SaveButton)
+                .addComponent(CreatePatientButton)
                 .addGap(42, 42, 42))
         );
 
@@ -408,7 +408,7 @@ public class NewJFrame extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void EnterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterButtonActionPerformed
+    private void InicioSeccionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InicioSeccionButtonActionPerformed
         // TODO add your handling code here:
         String username = UsernameLoginTextField.getText();
         String password = PasswordLoginTextField.getText();
@@ -444,9 +444,9 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         }
 
-    }//GEN-LAST:event_EnterButtonActionPerformed
+    }//GEN-LAST:event_InicioSeccionButtonActionPerformed
 
-    private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed
+    private void CreatePatientButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreatePatientButtonActionPerformed
         String firstname = FirstNameTextField.getText();
         String lastname = LastNameTextField.getText();
         String id = IDTextField.getText();
@@ -481,7 +481,7 @@ public class NewJFrame extends javax.swing.JFrame {
             PasswordConfirmationTextField.setText("");
         }
 
-    }//GEN-LAST:event_SaveButtonActionPerformed
+    }//GEN-LAST:event_CreatePatientButtonActionPerformed
 
     private void PasswordConfirmationTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PasswordConfirmationTextFieldActionPerformed
         // TODO add your handling code here:
@@ -491,17 +491,17 @@ public class NewJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField AddressTextField;
     private javax.swing.JTextField BirthdateTextField;
+    private javax.swing.JButton CreatePatientButton;
     private javax.swing.JTextField EmailTextField;
-    private javax.swing.JButton EnterButton;
     private javax.swing.JTextField FirstNameTextField;
     private javax.swing.JComboBox<String> GenderComboBox;
     private javax.swing.JTextField IDTextField;
+    private javax.swing.JButton InicioSeccionButton;
     private javax.swing.JTextField LastNameTextField;
     private javax.swing.JTextField PasswordConfirmationTextField;
     private javax.swing.JTextField PasswordLoginTextField;
     private javax.swing.JTextField PasswordRegisterTextField;
     private javax.swing.JTextField PhoneTextField;
-    private javax.swing.JButton SaveButton;
     private javax.swing.JTextField UserTextField;
     private javax.swing.JTextField UsernameLoginTextField;
     private javax.swing.JButton jButton1;
