@@ -1,13 +1,33 @@
 {
-    "appointments": [{
-        "reason": "polio",
-        "datetime": "2026-05-06T10:00",
-        "patientId": 112234567890,
-        "doctorId": 111234567890,
-        "id": "A-112234567890-0000",
-        "type": true,
-        "status": "CANCELED"
-    }],
+    "appointments": [
+        {
+            "reason": "polio",
+            "datetime": "2026-05-06T10:00",
+            "patientId": 112234567890,
+            "doctorId": 111234567890,
+            "id": "A-112234567890-0000",
+            "type": true,
+            "status": "CANCELED"
+        },
+        {
+            "reason": "low iqREASON FOR REESCHEDULE: aids",
+            "datetime": "2026-05-25T10:00",
+            "patientId": 112234567890,
+            "doctorId": 111234567890,
+            "id": "A-112234567890-0001",
+            "type": false,
+            "status": "CANCELED"
+        },
+        {
+            "reason": "help me",
+            "datetime": "2026-08-09T15:15",
+            "patientId": 112234567890,
+            "doctorId": 111234567890,
+            "id": "A-112234567890-0002",
+            "type": false,
+            "status": "COMPLETED"
+        }
+    ],
     "users": [
         {
             "firstname": "Carlos",
