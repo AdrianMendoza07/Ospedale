@@ -71,9 +71,8 @@ public class HospitalizationController {
         for (Hospitalization h : d.getHospitalizations()) {
             if (h.getStatus() == HospitalizationStatus.REQUESTED) {
                 String idHosp = h.getId();
-                String hosp = "Patient: " + h.getPatient().getFirstname() + " " + h.getPatient().getLastname();
 
-                pendingHosp.put(idHosp, hosp);
+                pendingHosp.put(idHosp, idHosp);
             }
         }
 
