@@ -45,9 +45,9 @@ public class NewJFrame111 extends javax.swing.JFrame {
         llenarComboBoxCitasReprogramar();
     }
 
-    private void llenarComboBoxPacientes() {
-        PatientComboBox.removeAllItems();
-        PatientComboBox.addItem("Select one");
+    private void llenarComboBoxPacientesId() {
+        PatientIdComboBox.removeAllItems();
+        PatientIdComboBox.addItem("Select one");
         Response response = HospitalizationController.loadPatientIdForDoctor();
 
         if (response != null && response.getStatus() == 200 && response.getData() != null) {
@@ -60,6 +60,26 @@ public class NewJFrame111 extends javax.swing.JFrame {
             }
         }
     }
+    
+    private void llenarComboBoxPacientes() {
+        PatientComboBox.removeAllItems();
+        PatientComboBox.addItem("Select one");
+        Response response = AppointmentController.loadPatientIdForDoctor();
+
+        if (response != null && response.getStatus() == 200 && response.getData() != null) {
+            HashMap<String, Object> patientIdMap = (HashMap<String, Object>) response.getData();
+
+            for (Object idObj : patientIdMap.values()) {
+                String idPaciente = (String) idObj;
+
+                PatientComboBox.addItem(idPaciente);
+            }
+        }
+    }
+    
+    
+    
+    
 
     private void llenarComboBoxHospitalizacionesSolicitadas() {
         RequestComboBox.removeAllItems();
@@ -1310,7 +1330,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
             PatientIdComboBox.setSelectedIndex(0);
             PattientRadioButton.setSelected(false);
             
-            llenarComboBoxPacientes();
+            llenarComboBoxPacientesId();
         }
 
 
