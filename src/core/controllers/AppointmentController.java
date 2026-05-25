@@ -359,7 +359,7 @@ public class AppointmentController {
         for (Appointment ap : p.getAppointments()) {
             String apId = ap.getId();
             LocalDateTime date = ap.getDatetime();
-            String doctor = ap.getDoctor().getFirstname() + "" + ap.getDoctor().getFirstname();
+            String doctor = ap.getDoctor().getFirstname() + "" + ap.getDoctor().getLastname();
             String specialty = "" + ap.getSpecialty();
             String type;
             if (ap.isType()) {
@@ -393,7 +393,7 @@ public class AppointmentController {
         for (Appointment ap : p.getAppointments()) {
             String apId = ap.getId();
             LocalDateTime date = ap.getDatetime();
-            String doctor = ap.getDoctor().getFirstname() + "" + ap.getDoctor().getFirstname();
+            String doctor = ap.getDoctor().getFirstname() + "" + ap.getDoctor().getLastname();
             String specialty = "" + ap.getSpecialty();
             String type;
             if (ap.isType()) {
@@ -470,7 +470,7 @@ public class AppointmentController {
         }
     }
 
-    public static Response rescheduleAppointment(String appointmentId, String newDateStr, String newReason) {
+    public static Response rescheduleAppointment(String appointmentId, String newTimeStr, String newReason) {
         try {
             if (appointmentId == null || appointmentId.trim().isEmpty() || appointmentId.equals("Select one")) {
                 return new Response("Debe seleccionar una cita válida.", Status.BAD_REQUEST);
@@ -482,9 +482,9 @@ public class AppointmentController {
             LocalDate date;
             LocalTime time;
             try {
-                date = LocalDate.parse(newDateStr.trim());
+                time = LocalTime.parse(newTimeStr.trim());
             } catch (DateTimeParseException e) {
-                return new Response("La nueva fecha no tiene un formato válido (AAAA-MM-DD).", Status.BAD_REQUEST);
+                return new Response("La nueva hora no tiene un formato válido (AAAA-MM-DD).", Status.BAD_REQUEST);
             }
 
             DataRepository storage = DataRepository.getInstance();
@@ -500,7 +500,7 @@ public class AppointmentController {
                 return new Response("La cita especificada no existe.", Status.NOT_FOUND);
             }
 
-            time = target.getDatetime().toLocalTime();
+            date = target.getDatetime().toLocalDate();
             LocalDateTime newDateTime = LocalDateTime.of(date, time);
 
             long doctorId = target.getDoctor().getId();
@@ -514,7 +514,7 @@ public class AppointmentController {
 
             target.setDatetime(newDateTime);
             target.setReason(target.getReason() + "REASON FOR REESCHEDULE: "+newReason.trim());
-            target.setStatus(AppointmentStatus.REQUESTED);
+            target.setStatus(AppointmentStatus.PENDING);
 
             JsonManager jsonManager = new JsonManager(storage);
             jsonManager.saveAllDataToJson("json/users.json");
