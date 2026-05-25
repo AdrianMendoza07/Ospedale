@@ -4,16 +4,14 @@
  */
 package core.views;
 
+import core.controllers.AppointmentController;
 import core.controllers.DoctorContoller;
+import core.controllers.HospitalizationController;
 import core.controllers.utils.Response;
-import core.model.Appointment;
-import core.model.Doctor;
-import core.model.Hospitalization;
-import core.model.Patient;
-import core.model.Specialty;
-import core.model.User;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,12 +23,50 @@ public class NewJFrame11 extends javax.swing.JFrame {
 
     private int x, y;
     private String currentUsername;
+    private HashMap<String, String> mapaDoctoresCargados = new HashMap<>();
 
     public NewJFrame11(String username) {
         initComponents();
         this.currentUsername = username;
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
+        llenarComboBoxMedicos();
+        llenarComboBoxPacientes();
+    }
+
+    private void llenarComboBoxMedicos() {
+        DoctorComboBox.removeAllItems();
+        DoctorComboBox.addItem("Select one");
+        mapaDoctoresCargados.clear();
+
+        Response response = AppointmentController.loadDoctors();
+        if (response != null && response.getStatus() == 200 && response.getData() != null) {
+            HashMap<String, Object> doctoresMap = (HashMap<String, Object>) response.getData();
+
+            for (Map.Entry<String, Object> entry : doctoresMap.entrySet()) {
+                String idStr = entry.getKey();
+                Object nombreCompleto = entry.getValue();
+
+                mapaDoctoresCargados.put(idStr, (String) nombreCompleto);
+                DoctorComboBox.addItem((String) nombreCompleto);
+            }
+        }
+    }
+
+    private void llenarComboBoxPacientes() {
+        PatientComboBox.removeAllItems();
+        PatientComboBox.addItem("Select one");
+        Response response = HospitalizationController.loadPatientIdForDoctor();
+
+        if (response != null && response.getStatus() == 200 && response.getData() != null) {
+            HashMap<String, Object> patientIdMap = (HashMap<String, Object>) response.getData();
+
+            for (Object idObj : patientIdMap.values()) {
+                String idPaciente = (String) idObj;
+
+                PatientComboBox.addItem(idPaciente);
+            }
+        }
     }
 
     /**
@@ -423,16 +459,16 @@ public class NewJFrame11 extends javax.swing.JFrame {
         String username = UserAdminTextField.getText();
         String password = PasswordAdminTextField.getText();
         String comPassword = PasswordConfirmationAdminTextField.getText();
-        
+
         Response response = DoctorContoller.createDoctor(id, username, firstname, lastname, password, comPassword, spec, licenseNumber, assignedOffice);
-        
+
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
         } else if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Atención " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
-            
+
             FirstnameAdminTextField.setText("");
             LastnameAdminTextField.setText("");
             IDAdminTextField.setText("");
@@ -442,22 +478,27 @@ public class NewJFrame11 extends javax.swing.JFrame {
             UserAdminTextField.setText("");
             PasswordAdminTextField.setText("");
             PasswordConfirmationAdminTextField.setText("");
-            
+
         }
-        
+
     }//GEN-LAST:event_SaveDoctorInAdminViewButtonActionPerformed
 
     private void DoctorViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DoctorViewButtonActionPerformed
-        long idDoctor = Long.parseLong(DoctorComboBox.getItemAt(DoctorComboBox.getSelectedIndex()));
-        Doctor temp = null;
-        for (User use : this.users) {
-            if (use.getId() == idDoctor) {
-                temp = (Doctor) user;
+        String doctorNombreSeleccionado = DoctorComboBox.getItemAt(DoctorComboBox.getSelectedIndex());
+        String doctorUsernameEncontrado = null;
+        String idDoctorEncontrado = null;
+        for (Map.Entry<String, String> entry : mapaDoctoresCargados.entrySet()) {
+            if (entry.getValue().equals(doctorNombreSeleccionado)) {
+                doctorUsernameEncontrado = entry.getKey();
+                break;
             }
         }
-        NewJFrame111 doctor = new NewJFrame111(user, temp, users, hospitalizations, appointments);
-        this.setVisible(false);
-        doctor.setVisible(true);
+
+        if (doctorUsernameEncontrado != null) {
+            NewJFrame111 doctor = new NewJFrame111(doctorUsernameEncontrado, "ADMIN");
+            this.setVisible(false);
+            doctor.setVisible(true);
+        }
     }//GEN-LAST:event_DoctorViewButtonActionPerformed
 
     private void LogoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutButtonActionPerformed
@@ -468,16 +509,14 @@ public class NewJFrame11 extends javax.swing.JFrame {
     }//GEN-LAST:event_LogoutButtonActionPerformed
 
     private void PatientViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PatientViewButtonActionPerformed
-        long idPatient = Long.parseLong(DoctorComboBox.getItemAt(DoctorComboBox.getSelectedIndex()));
-        Patient temp = null;
-        for (User use : this.users) {
-            if (use.getId() == idPatient) {
-                temp = (Patient) user;
-            }
+        String patientUsernameSeleccionado = PatientComboBox.getItemAt(PatientComboBox.getSelectedIndex());
+        if (patientUsernameSeleccionado != null) {
+ 
+            NewJFrame1 pantallaPaciente = new NewJFrame1(patientUsernameSeleccionado, "ADMIN");
+
+            this.setVisible(false);
+            pantallaPaciente.setVisible(true);
         }
-        NewJFrame1 patient = new NewJFrame1(user, temp, users, appointments, hospitalizations);
-        this.setVisible(false);
-        patient.setVisible(true);
     }//GEN-LAST:event_PatientViewButtonActionPerformed
 
 
