@@ -853,7 +853,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
         String password = PasswordInfoTextField.getText();
         String comPassword = PasswordConfirmationInfoTextField.getText();
 
-        Response response = PatientController.updatePatient(username, firstname, lastname, password, comPassword, email, birthdate, gender, phone, address);
+        Response response = PatientController.updatePatient(this.currentUsername, username, firstname, lastname, password, comPassword, email, birthdate, gender, phone, address);
 
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
@@ -874,6 +874,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
             UserModifyInfoTextField.setText("");
             PasswordInfoTextField.setText("");
             PasswordConfirmationInfoTextField.setText("");
+            this.currentUsername = username;
         }
 
     }//GEN-LAST:event_ModifyPatientInfoButtonActionPerformed
