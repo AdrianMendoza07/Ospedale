@@ -1395,6 +1395,8 @@ public class NewJFrame111 extends javax.swing.JFrame {
             ObservationsAppointmentTextArea.setText("");
             RecommendedTeatmentTextArea.setText("");
             IndicationTextArea.setText("");
+
+            llenarComboBoxCitasReprogramar();
         }
     }//GEN-LAST:event_CompleteMedicalAppointmentButtonActionPerformed
 
