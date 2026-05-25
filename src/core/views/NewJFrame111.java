@@ -86,12 +86,6 @@ public class NewJFrame111 extends javax.swing.JFrame {
         AppointmentIDComboBox.removeAllItems();
         AppointmentIDComboBox.addItem("Select one");
 
-        AppointmentComboBox.removeAllItems();
-        AppointmentComboBox.addItem("Select one");
-        
-        AppointmentIDPescribeMedicationComboBox.removeAllItems();
-        AppointmentIDPescribeMedicationComboBox.addItem("Select one");
-
         Response response = AppointmentController.loadRequestedAppointmentIdsToDoctor(this.currentUsername);
 
         if (response != null && response.getStatus() == 200 && response.getData() != null) {
@@ -102,8 +96,6 @@ public class NewJFrame111 extends javax.swing.JFrame {
                 String idCita = (String) idObj;
 
                 AppointmentIDComboBox.addItem(idCita);
-                AppointmentComboBox.addItem(idCita);
-                AppointmentIDPescribeMedicationComboBox.addItem(idCita);
             }
         }
     }
@@ -113,6 +105,12 @@ public class NewJFrame111 extends javax.swing.JFrame {
         RescheduleAppointmentComboBox.removeAllItems();
         RescheduleAppointmentComboBox.addItem("Select one");
 
+        AppointmentComboBox.removeAllItems();
+        AppointmentComboBox.addItem("Select one");
+
+        AppointmentIDPescribeMedicationComboBox.removeAllItems();
+        AppointmentIDPescribeMedicationComboBox.addItem("Select one");
+
         Response response = AppointmentController.loadPendingAppointmentIdsToDoctor(this.currentUsername);
 
         if (response != null && response.getStatus() == 200 && response.getData() != null) {
@@ -120,6 +118,8 @@ public class NewJFrame111 extends javax.swing.JFrame {
 
             for (Object idObj : appointmentMap.values()) {
                 RescheduleAppointmentComboBox.addItem((String) idObj);
+                AppointmentComboBox.addItem((String) idObj);
+                AppointmentIDPescribeMedicationComboBox.addItem((String) idObj);
 
             }
         }
