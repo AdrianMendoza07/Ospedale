@@ -107,7 +107,7 @@ public class DoctorContoller {
         }
     }
 
-    public static Response updateDoctor(String username, String firstname, String lastname, String password, String comPassword, String inSpecialty, String license, String office) {
+    public static Response updateDoctor(String username, String newUsername, String firstname, String lastname, String password, String comPassword, String inSpecialty, String license, String office) {
 
         try {
             Specialty dSpecialty;
@@ -122,6 +122,10 @@ public class DoctorContoller {
                 return new Response("User not found", Status.NOT_FOUND);
             }
 
+            if (newUsername == null || newUsername.trim().isEmpty()) {
+                return new Response("Username must not be empty", Status.BAD_REQUEST);
+            }
+            
             if (firstname == null || firstname.trim().isEmpty()) {
                 return new Response("Firstname must not be empty", Status.BAD_REQUEST);
             }
@@ -170,7 +174,7 @@ public class DoctorContoller {
                 return new Response("Password and password comfirmation must be the same", Status.BAD_REQUEST);
             }
 
-            storage.updateDoctor(username, firstname, lastname, password, dSpecialty, license, office);
+            storage.updateDoctor(newUsername, firstname, lastname, password, dSpecialty, license, office);
             
             JsonManager jsonManager = new JsonManager(storage);
             jsonManager.saveAllDataToJson("json/users.json");

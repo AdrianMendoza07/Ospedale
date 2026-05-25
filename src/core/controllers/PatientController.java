@@ -27,31 +27,32 @@ public class PatientController {
             LocalDate dateBirthdate;
 
             //Revisamos que los campos no esten vacios
-            if (id.trim().equals("")) {
+            if (id == null || id.trim().equals("")) {
                 return new Response("Id must not be empty", Status.BAD_REQUEST);
             }
-            if (username.trim().equals("")) {
+            if (username == null || username.trim().equals("")) {
                 return new Response("Username must not be empty", Status.BAD_REQUEST);
             }
-            if (firstname.trim().equals("")) {
+
+            if (firstname == null || firstname.trim().equals("")) {
                 return new Response("Firstname must not be empty", Status.BAD_REQUEST);
             }
-            if (lastname.trim().equals("")) {
+            if (lastname == null || lastname.trim().equals("")) {
                 return new Response("Lastname must not be empty", Status.BAD_REQUEST);
             }
-            if (password.trim().equals("")) {
+            if (password == null || password.trim().equals("")) {
                 return new Response("Password must not be empty", Status.BAD_REQUEST);
             }
-            if (comPassword.trim().equals("")) {
+            if (comPassword == null || comPassword.trim().equals("")) {
                 return new Response("Password comfirmation must not be empty", Status.BAD_REQUEST);
             }
-            if (email.trim().equals("")) {
+            if (email == null || email.trim().equals("")) {
                 return new Response("Email must not be empty", Status.BAD_REQUEST);
             }
-            if (phone.trim().equals("")) {
+            if (phone == null || phone.trim().equals("")) {
                 return new Response("Phone must not be empty", Status.BAD_REQUEST);
             }
-            if (address.trim().equals("")) {
+            if (address == null || address.trim().equals("")) {
                 return new Response("Address must not be empty", Status.BAD_REQUEST);
             }
 
@@ -114,7 +115,7 @@ public class PatientController {
             if (!storage.addPatient(longId, username, firstname, lastname, password, email, dateBirthdate, boolGender, longPhone, address)) {
                 return new Response("Patient with those cretentials already exists", Status.BAD_REQUEST);
             }
-            
+
             JsonManager jsonManager = new JsonManager(storage);
             jsonManager.saveAllDataToJson("json/users.json");
 
@@ -125,7 +126,7 @@ public class PatientController {
         }
     }
 
-    public static Response updatePatient(String username, String firstname, String lastname, String password, String comPassword, String email, String birthdate, String gender, String phone, String address) {
+    public static Response updatePatient(String username, String newUsername, String firstname, String lastname, String password, String comPassword, String email, String birthdate, String gender, String phone, String address) {
 
         try {
             long lPhone;
@@ -142,25 +143,29 @@ public class PatientController {
                 return new Response("User not found", Status.NOT_FOUND);
             }
 
-            if (firstname.trim().equals("")) {
+            if (newUsername == null || newUsername.trim().equals("")) {
+                return new Response("Username must not be empty", Status.BAD_REQUEST);
+            }
+
+            if (firstname == null || firstname.trim().equals("")) {
                 return new Response("Firstname must not be empty", Status.BAD_REQUEST);
             }
-            if (lastname.trim().equals("")) {
+            if (lastname == null || lastname.trim().equals("")) {
                 return new Response("Lastname must not be empty", Status.BAD_REQUEST);
             }
-            if (password.trim().equals("")) {
+            if (password == null || password.trim().equals("")) {
                 return new Response("Password must not be empty", Status.BAD_REQUEST);
             }
-            if (comPassword.trim().equals("")) {
+            if (comPassword == null || comPassword.trim().equals("")) {
                 return new Response("Password comfirmation must not be empty", Status.BAD_REQUEST);
             }
-            if (email.trim().equals("")) {
+            if (email == null || email.trim().equals("")) {
                 return new Response("Email must not be empty", Status.BAD_REQUEST);
             }
-            if (phone.trim().equals("")) {
+            if (phone == null || phone.trim().equals("")) {
                 return new Response("Phone must not be empty", Status.BAD_REQUEST);
             }
-            if (address.trim().equals("")) {
+            if (address == null || address.trim().equals("")) {
                 return new Response("Address must not be empty", Status.BAD_REQUEST);
             }
 
@@ -198,11 +203,11 @@ public class PatientController {
 
             bGender = !gender.equals("Female");
 
-            storage.updatePatient(username, firstname, lastname, password, email, dBirthdate, bGender, lPhone, address);
-            
+            storage.updatePatient(newUsername, firstname, lastname, password, email, dBirthdate, bGender, lPhone, address);
+
             JsonManager jsonManager = new JsonManager(storage);
             jsonManager.saveAllDataToJson("json/users.json");
-            
+
             return new Response("Patient updated successfully", Status.OK);
 
         } catch (Exception e) {
