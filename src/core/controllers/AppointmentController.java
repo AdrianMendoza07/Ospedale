@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -434,6 +435,21 @@ public class AppointmentController {
 
         return new Response("Appointment ids loaded sucessfully", Status.OK, appointmentMap);
     }
+    
+    public static Response loadPatientIdForDoctor() {
+        DataRepository storage = DataRepository.getInstance();
+        ArrayList<Patient> ids = storage.getPatients();
+        HashMap<String, Object> patientIdMap = new HashMap<>();
+
+        for (Patient p : ids) {
+            String id = "" + p.getId();
+            patientIdMap.put(id, id);
+        }
+
+        return new Response("Hospitalizations loaded sucessfully", Status.OK, patientIdMap);
+
+    }
+    
 
     public static Response acceptAppointment(String appointmentId) {
         try {
