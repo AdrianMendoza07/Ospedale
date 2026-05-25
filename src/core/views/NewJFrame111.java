@@ -43,6 +43,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
         llenarComboBoxHospitalizacionesSolicitadas();
         llenarComboBoxCitasSolicitadas();
         llenarComboBoxCitasReprogramar();
+        llenarComboBoxPacientesId();
     }
 
     private void llenarComboBoxPacientesId() {
