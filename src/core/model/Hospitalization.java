@@ -79,6 +79,14 @@ public class Hospitalization {
         return status;
     }
 
+    public LocalDate getStartDate() {
+        return this.date;
+    }
+
+    public String getRoomNumber() {
+        return this.roomType != null ? this.roomType.name() : "UNASSIGNED";
+    }
+
     public void setStatus(HospitalizationStatus status) {
         this.status = status;
     }
