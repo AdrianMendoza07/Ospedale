@@ -24,7 +24,7 @@ public class DoctorContoller {
 
         try {
             long longId;
-            Specialty dSpecialty;
+            Specialty typeSpecialty;
 
             if (id == null || id.trim().isEmpty()) {
                 return new Response("Id must not be empty", Status.BAD_REQUEST);
@@ -54,11 +54,37 @@ public class DoctorContoller {
                 return new Response("Office number must not be empty", Status.BAD_REQUEST);
             }
 
-            try {
-                dSpecialty = Specialty.valueOf(inSpecialty);
-            } catch (IllegalArgumentException e) {
-                return new Response("Invalid specialty selected", Status.BAD_REQUEST);
+            typeSpecialty = switch (inSpecialty.trim().toUpperCase()) {
+                case "GENERALMEDICINE" ->
+                    Specialty.GENERAL_MEDICINE;
+                case "CARDIOLOGY" ->
+                    Specialty.CARDIOLOGY;
+                case "PEDIATRICS" ->
+                    Specialty.PEDIATRICS;
+                case "NEUROLOGY" ->
+                    Specialty.NEUROLOGY;
+                case "TRAUMATOLOGY&ORTHOPEDICS" ->
+                    Specialty.TRAUMATOLOGY_ORTHOPEDICS;
+                case "GYNECOLOGY&OBSTETRICS" ->
+                    Specialty.GYNECOLOGY_OBSTETRICS;
+                case "DERMATOLOGY" ->
+                    Specialty.DERMATOLOGY;
+                case "PSYCHIATRY" ->
+                    Specialty.PSYCHIATRY;
+                case "ONCOLOGY" ->
+                    Specialty.ONCOLOGY;
+                case "OPHTHALMOLOGY" ->
+                    Specialty.OPHTHALMOLOGY;
+                case "INTERNALMEDICINE" ->
+                    Specialty.INTERNAL_MEDICINE;
+                default ->
+                    null;
+            };
+
+            if (typeSpecialty == null) {
+                return new Response("Debe seleccionar una especialidad médica válida.", Status.BAD_REQUEST);
             }
+
             if (license.trim().equals("")) {
                 return new Response("License must not be empty", Status.BAD_REQUEST);
             }
@@ -93,7 +119,7 @@ public class DoctorContoller {
             }
 
             DataRepository storage = DataRepository.getInstance();
-            if (!storage.addDoctor(longId, username, firstname, lastname, password, license, dSpecialty, office)) {
+            if (!storage.addDoctor(longId, username, firstname, lastname, password, license, typeSpecialty, office)) {
                 return new Response("Doctor with those cretentials already exists", Status.BAD_REQUEST);
             }
 
@@ -125,7 +151,7 @@ public class DoctorContoller {
             if (newUsername == null || newUsername.trim().isEmpty()) {
                 return new Response("Username must not be empty", Status.BAD_REQUEST);
             }
-            
+
             if (firstname == null || firstname.trim().isEmpty()) {
                 return new Response("Firstname must not be empty", Status.BAD_REQUEST);
             }
@@ -175,10 +201,10 @@ public class DoctorContoller {
             }
 
             storage.updateDoctor(newUsername, firstname, lastname, password, dSpecialty, license, office);
-            
+
             JsonManager jsonManager = new JsonManager(storage);
             jsonManager.saveAllDataToJson("json/users.json");
-            
+
             return new Response("Doctor updated successfully", Status.OK);
 
         } catch (Exception e) {
